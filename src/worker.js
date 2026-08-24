@@ -982,6 +982,12 @@ export default {
 
     const routeCtx = { env, user, ctx };
 
+    // Lets the frontend know who's logged in and what they can see/do
+    // (e.g. whether to show admin-only controls like assign/team management).
+    if (url.pathname === '/api/me') {
+      return json({ id: user.id, name: user.name, email: user.email, role: user.role });
+    }
+
     if (url.pathname.startsWith('/api/partners')) return handlePartners(request, routeCtx);
     if (url.pathname.startsWith('/api/contributions') || url.pathname.startsWith('/api/tier-caps')) {
       return handleContributions(request, routeCtx);
