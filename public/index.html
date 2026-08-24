@@ -1,919 +1,878 @@
-Yes. Given the system you are already building, I would **not build a generic CRM**. I would build an **AI-assisted corporate partnership operating system specifically for The Bosso at 100**.
-
-The objective is not merely to send emails. It should move a company through:
-
-**Target → Research → Contact → Conversation → Proposal → Negotiation → Commitment → Payment → Activation**
-
-That matters because your campaign is heavily dependent on sponsorship/advertising: the strategy targets **$73,000 of $111,000 projected revenue** from sponsorship, advertising and crowdfunding, with a recommended anchor sponsor of **$15,000–$25,000**. 
-
-## What I would build
-
-Call it something internal like **Bosso 100 Partnership Engine**.
-
-Mobile-first PWA:
-
-```text
-Cloudflare Pages
-       │
-       ▼
-React / HTML / JS frontend
-       │
-       ▼
-Cloudflare Worker API
-       │
- ┌─────┼───────────────┐
- ▼     ▼               ▼
-D1    R2             AI API
-CRM   Documents      Research/
-                    Personalisation
-```
-
-Your existing `users`, `partners`, `goals`, `activities`, `outreach_log`, placement inventory and content systems become the underlying CRM.
-
-The important difference is that **AI sits on top of the CRM and recommends what the team should do next.**
-
----
-
-# 1. The home screen should be a sales command centre
-
-When you open it on your phone, you shouldn't see a conventional CRM dashboard full of charts.
-
-You should see:
-
-### TODAY
-
-**12 actions requiring attention**
-
-| Company        | Stage          | Action                  |
-| -------------- | -------------- | ----------------------- |
-| CBZ            | Proposal sent  | Follow up today         |
-| Delta          | Meeting booked | Prepare meeting brief   |
-| Old Mutual     | Contacted      | Find decision maker     |
-| Nyaradzo       | No response    | Send second touch       |
-| National Foods | Research       | Identify marketing lead |
-
-Then:
-
-### CAMPAIGN
-
-**Corporate target: $73,000**
-
-```text
-Committed       $25,000
-Negotiating     $18,000
-Proposals       $30,000
-Pipeline        $91,000
-```
-
-And:
-
-**Anchor sponsor:** Not secured
-
-That gives you an immediate answer to:
-
-> "What should I be doing right now to get this project funded?"
-
----
-
-# 2. AI company research
-
-This is probably the most valuable feature.
-
-You enter:
-
-> CBZ
-
-The system creates a **Partner Intelligence Card**.
-
-### CBZ Bank
-
-**Category:** Banking
-**Potential tier:** Principal / Official
-**Target:** $15,000–$25,000
-**Club conflict:** Check
-**Strategic fit:** High
-
-Then AI produces:
-
-### Why CBZ could care
-
-* Financial inclusion
-* Zimbabwean heritage
-* Youth/community engagement
-* National visibility
-* Centenary cultural significance
-
-### Recommended pitch
-
-> Position The Bosso at 100 as a national heritage and community storytelling property rather than simply a football film.
-
-### Recommended package
-
-**Principal Partner — $20,000**
-
-### Relevant inventory
-
-* In-film integration
-* Marketing campaign
-* Premiere
-* Community screenings
-* Digital content
-
-The rate card gives you the actual commercial structure: Principal is $15,000–$25,000, Official $5,000–$12,000, Community $1,500–$5,000 and Event from $2,000/in-kind. 
-
-The AI should **not invent packages**. It should assemble recommendations from your approved inventory.
-
----
-
-# 3. AI should score every prospect
-
-Give every company a score out of 100.
-
-For example:
-
-### CBZ
-
-**Partner Score: 87/100**
-
-```text
-Strategic fit       22/25
-Audience fit        20/20
-Category availability 15/15
-Budget potential    18/20
-Relationship access  7/10
-Timing               5/10
-```
-
-Then:
-
-> **Recommendation: PRIORITY A**
-
-That gives your team a rational way to decide where to spend time.
-
-Your strategy specifically identifies banking/fintech, insurance, media/broadcast, hospitality and gold/mining-adjacent companies as complementary categories, while warning against categories where Highlanders already has partners. 
-
-So your AI scoring engine should understand those rules.
-
----
-
-# 4. The killer feature: AI-generated outreach
-
-Don't make the team write every message.
-
-Click:
-
-**Generate Outreach**
-
-The system knows:
-
-```text
-Company
-Contact
-Industry
-Campaign
-Recommended tier
-Their strategic fit
-Previous communication
-Current pipeline stage
-Relevant film inventory
-```
-
-And generates:
-
-### Initial email
-
-Short.
-
-Business-oriented.
-
-Not:
-
-> "We are making an exciting film and would love your support."
-
-Instead:
-
-> "We are currently selecting a principal banking partner for The Bosso at 100..."
-
-It should explain **why them**, what is being offered and what the next step is.
-
-Then generate:
-
-* Email
-* LinkedIn message
-* WhatsApp message
-* Follow-up
-* Meeting request
-* Proposal introduction
-
-The team approves before sending.
-
-**Do not allow autonomous AI sending initially.**
-
-Human approval is important for corporate relationships.
-
----
-
-# 5. Outreach sequence engine
-
-This is where the system becomes much more powerful than a spreadsheet.
-
-For every prospect:
-
-```text
-DAY 0
-Initial email
-
-       ↓
-
-DAY 2
-LinkedIn / WhatsApp touch
-
-       ↓
-
-DAY 5
-Follow-up
-
-       ↓
-
-DAY 10
-Value/inventory follow-up
-
-       ↓
-
-DAY 17
-Final polite follow-up
-
-       ↓
-
-NURTURE
-30-day reminder
-```
-
-But the AI should adapt the sequence.
-
-If they reply:
-
-> "Please send the proposal."
-
-The system immediately changes:
-
-**Status → proposal_sent**
-
-and creates:
-
-> Follow up in 3 business days.
-
-If:
-
-> "We are interested in the community aspect."
-
-AI changes the recommended pitch toward:
-
-**Community Partner / Event Partner**
-
-rather than continuing to sell Principal.
-
----
-
-# 6. Relationship intelligence
-
-Every interaction should become structured information.
-
-You might have:
-
-```text
-CBZ
-│
-├── Initial email
-├── WhatsApp
-├── Meeting
-├── Proposal
-├── Follow-up
-└── Negotiation
-```
-
-AI periodically summarises:
-
-> **Relationship status:** Warm
-> **Interest:** High
-> **Objection:** Budget approval
-> **Decision maker:** Marketing
-> **Next action:** Provide revised Principal package
-> **Probability:** 65%
-
-This means when Tatenda opens the account, he doesn't have to read 15 messages to understand what's happening.
-
----
-
-# 7. Meeting intelligence
-
-This could be extremely useful.
-
-Before a meeting:
-
-### AI Meeting Brief
-
-**CBZ × The Bosso at 100**
-
-**Objective:** Secure Principal Partner
-
-**Ask:** $20,000
-
-**Their likely interests:**
-
-* National heritage
-* Community engagement
-* Brand visibility
-
-**Our assets:**
-
-* Feature-film integration
-* Broadcast
-* Streaming
-* Community screenings
-* Premiere
-
-**Don't lead with:**
-
-* Production costs
-* "We need money"
-* Generic advertising
-
-**Lead with:**
-
-* Centenary
-* Highlanders audience
-* Cultural significance
-* Category exclusivity
-
-Then after the meeting you can dictate into your phone:
-
-> "They like the project but $20,000 requires approval from the marketing director..."
-
-AI converts that into structured CRM data.
-
----
-
-# 8. Proposal generator
-
-This is another major feature.
-
-Click:
-
-**Generate Proposal**
-
-The system pulls:
-
-```text
-Partner
-Company logo
-Contact
-Recommended tier
-Price
-Deliverables
-Visibility inventory
-Campaign information
-Payment milestones
-Project information
-```
-
-Then produces a branded PDF.
-
-So instead of manually building a proposal every time:
-
-**CBZ → Principal Partner → $20,000**
-
-generates the relevant proposal.
-
-And:
-
-**Hotel X → Event Partner → $2,500 + accommodation**
-
-generates a completely different one.
-
-This is especially important because your rate card deliberately keeps Principal/Official pricing out of public circulation and positions the prospectus as an enquiry-driven sales tool. 
-
----
-
-# 9. The system should understand your inventory
-
-This is where your `placement_scenes` table becomes powerful.
-
-Instead of AI simply saying:
-
-> "Offer product placement."
-
-It can search your actual inventory.
-
-For example:
-
-### Available placement
-
-**Scene 17**
-
-Restaurant scene
-
-**Category:** Hospitality
-
-**Visibility:** A — Story
-
-**Status:** Open
-
-Then AI can say:
-
-> "This company could be integrated naturally into Scene 17."
-
-That is much more sophisticated than ordinary sponsorship software.
-
-You essentially create a **film advertising inventory database**.
-
----
-
-# 10. Corporate conflict engine
-
-This is critical because Highlanders already has commercial relationships.
-
-Your system should have:
-
-### Category conflict
-
-```text
-Kit/Apparel       LOCKED
-Sports Nutrition  LOCKED
-Title Sponsorship LOCKED
-Banking           OPEN
-Insurance         OPEN
-Hospitality       OPEN
-Media             OPEN
-Mining            OPEN
-```
-
-If someone tries to create:
-
-> Principal Partner — Sports Nutrition
-
-the system should warn:
-
-> **CATEGORY CONFLICT**
->
-> Highlanders existing commercial inventory may restrict this category. Confirm with club commercial office before proceeding.
-
-Your strategy explicitly says to avoid categories where Highlanders already has partners. 
-
----
-
-# 11. AI pipeline forecasting
-
-This is where you connect it to your `goals` table.
-
-Suppose:
-
-```text
-Corporate target: $73,000
-```
-
-Pipeline:
-
-```text
-Principal
-CBZ          $20k   70%
-Old Mutual   $20k   50%
-Delta        $20k   40%
-
-Official
-Nyaradzo     $10k   60%
-National Foods $8k  50%
-
-Community
-SMEs         $15k   30%
-```
-
-AI calculates:
-
-### Weighted pipeline
-
-**$42,000**
-
-Then:
-
-> You are currently unlikely to hit the $73,000 corporate target.
-
-And recommends:
-
-> Add 8–12 qualified prospects in banking, insurance, hospitality and mining.
-
-That is far more useful than merely displaying:
-
-**"23 companies in pipeline."**
-
----
-
-# 12. AI tells you where to spend your time
-
-Every morning:
-
-### PRIORITY ACTIONS
-
-**1. Old Mutual — CALL TODAY**
-
-Reason:
-
-> Proposal opened 4 days ago and no response. High strategic fit and potential $20k Principal deal.
-
-**2. National Foods — FOLLOW UP**
-
-Reason:
-
-> Marketing contact identified and company aligns with FMCG/Event Partner opportunity.
-
-**3. Delta — MEETING PREP**
-
-Reason:
-
-> Meeting scheduled tomorrow. Recommend Event/Official package rather than Principal based on current engagement.
-
-This turns the software into an **AI sales manager**.
-
----
-
-# 13. Contact discovery
-
-You can have a button:
-
-**Find Decision Maker**
-
-AI researches public sources and returns:
-
-```text
-Company
-↓
-Marketing Director
-↓
-Corporate Affairs
-↓
-Brand Manager
-↓
-Sponsorship Manager
-```
-
-But this should **not automatically scrape private information**.
-
-Store only legitimate business contact information and preferably the public source.
-
-Your strategy already identifies several possible contacts but specifically says their titles should be verified before outreach. 
-
-The software should therefore show:
-
-**CONTACT VERIFIED: YES/NO**
-
-rather than assuming the database is correct.
-
----
-
-# 14. WhatsApp should be built in
-
-For Zimbabwe this is important.
-
-A salesperson should be able to open:
-
-**Partner → WhatsApp**
-
-and get a pre-generated message.
-
-For example:
-
-> Good afternoon Matthew. I'm reaching out regarding...
-
-But again:
-
-**Generate → Review → Send**
-
-rather than uncontrolled automation.
-
-You already have experience with WhatsApp/ManyChat infrastructure, so this fits naturally into the broader stack.
-
----
-
-# 15. Mobile-first field mode
-
-This should be designed for someone walking around Bulawayo with a phone.
-
-Not a desktop CRM shrunk down to mobile.
-
-### One-hand interface
-
-```text
-CBZ
-━━━━━━━━━━━━━━
-
-PRINCIPAL
-$15k–$25k
-
-87 SCORE
-
-[ CALL ]
-[ WHATSAPP ]
-[ EMAIL ]
-
-NEXT ACTION
-Follow up today
-
-[ ADD NOTE ]
-
-[ LOG ACTIVITY ]
-```
-
-At a networking event you could meet someone from a company and immediately:
-
-**Add contact → Company → Category → Notes → Follow-up date**
-
-in under 30 seconds.
-
----
-
-# 16. "Business Card → CRM"
-
-This is an excellent AI feature for physical networking.
-
-Take a photograph of a business card.
-
-AI extracts:
-
-```text
-Name
-Company
-Position
-Phone
-Email
-```
-
-Then:
-
-> **Possible existing company found: Delta Corporation**
-
-**Merge with existing prospect?**
-
-Yes.
-
-Now you've added the contact without typing.
-
----
-
-# 17. Corporate target generator
-
-I'd also build:
-
-### **Find 50 Prospects**
-
-You select:
-
-```text
-Target:
-Corporate
-
-Categories:
-Banking
-Insurance
-Hospitality
-Mining
-
-Minimum potential:
-$5,000
-
-Location:
-Zimbabwe
-```
-
-AI generates a prospect list.
-
-But **this should be a research assistant, not an indiscriminate email spam machine**.
-
-The campaign's economics are relationship-driven; your strategy specifically concludes that paid advertising is poor for closing anchor sponsors and that earned media/relationships are stronger. 
-
----
-
-# 18. Separate corporate and community engines
-
-This is important.
-
-Don't treat:
-
-**CBZ**
-
-and
-
-**Bulawayo City Council**
-
-the same way.
-
-### CORPORATE
-
-```text
-Research
-→ Decision maker
-→ Pitch
-→ Proposal
-→ Negotiation
-→ Contract
-→ Payment
-→ Activation
-```
-
-### CIVIC / COMMUNITY
-
-```text
-Institution
-→ Relationship
-→ Request
-→ Meeting
-→ Facilitation
-→ Agreement
-→ Activation
-```
-
-So the system understands that **Bulawayo City Council isn't a $10,000 sales prospect**.
-
----
-
-# 19. Campaign intelligence dashboard
-
-At the top level:
-
-### THE BOSSO AT 100
-
-**Funding Target**
-
-$111,000
-
-**Production Budget**
-
-$25,650
-
-**Corporate Target**
-
-$73,000
-
-**Corporate Secured**
-
-$XX,XXX
-
-**Pipeline**
-
-$XX,XXX
-
-**Weighted Pipeline**
-
-$XX,XXX
-
-**Anchor Sponsor**
-
-Not secured / Secured
-
-**Days to campaign deadline**
-
-XX
-
-Then:
-
-### Pipeline by category
-
-```text
-Banking       $40k
-Insurance     $25k
-Hospitality   $12k
-Mining        $20k
-Media         $10k
-SME           $8k
-```
-
-This gives you a genuine **fundraising operating system**, not just a contact database.
-
----
-
-# 20. The technology stack I'd use
-
-Given what you've already built, I'd keep it simple.
-
-### Frontend
-
-**Cloudflare Pages**
-
-PWA/mobile interface.
-
-### Backend
-
-**Cloudflare Workers**
-
-API, authentication, business logic, AI orchestration.
-
-### Database
-
-**Cloudflare D1**
-
-You already have the schema foundation.
-
-### Storage
-
-**Cloudflare R2**
-
-Store:
-
-* Logos
-* Proposal PDFs
-* Decks
-* Contracts
-* Contact documents
-* Creative assets
-
-### AI
-
-Use an LLM API through the Worker for:
-
-* Company research summarisation
-* Lead scoring
-* Personalisation
-* Outreach generation
-* Meeting briefs
-* Follow-up recommendations
-* Pipeline analysis
-* Proposal drafting
-
-### Search/research
-
-A web-search layer for current company information and decision-maker verification.
-
-### Communications
-
-* Email provider/API
-* WhatsApp Business API
-* Optional SMS later
-
-### Analytics
-
-Your own D1 queries initially. Don't introduce a heavyweight BI system yet.
-
----
-
-# The most important design principle
-
-**Don't build an AI email spammer.**
-
-Build an **AI-assisted relationship sales machine**.
-
-Your target is not:
-
-> Send 10,000 emails.
-
-Your target is:
-
-> Identify 100 high-value companies → get the right person → establish relevance → secure 20 serious conversations → produce 10 proposals → close 1–3 anchor/official partners.
-
-For a campaign where the Principal tier alone is **$15,000–$25,000** and Official is **$5,000–$12,000**, one or two good relationships can matter more than thousands of low-quality leads. 
-
-## I would build it in this order
-
-**Phase 1 — CRM**
-
-* Partners
-* Users
-* Pipeline
-* Activities
-* Contacts
-* Tasks
-* Goals
-
-**Phase 2 — Outreach**
-
-* Email
-* WhatsApp
-* Templates
-* Follow-up sequences
-* Outreach history
-
-**Phase 3 — AI**
-
-* Company research
-* Lead scoring
-* Personalised outreach
-* Follow-up recommendations
-* Meeting briefs
-
-**Phase 4 — Commercial engine**
-
-* Sponsorship inventory
-* Placement scenes
-* Package builder
-* Proposal generator
-* PDF generation
-
-**Phase 5 — Intelligence**
-
-* Pipeline forecasting
-* Goal tracking
-* Category gaps
-* Conversion analytics
-* "What should we do today?" AI
-
-The **Phase 5 feature is ultimately the killer feature**: when you open the app, it should tell the team, based on the $73,000 corporate target and current pipeline, **exactly which 5–10 actions have the highest expected financial impact today**.
-
-That is the system I'd build rather than another generic Salesforce-style CRM.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bosso Movie — Outreach</title>
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --panel:#F6F5F1;
+    --panel-2:#EFEDE5;
+    --ink:#16160F;
+    --ink-muted:#6B6A5E;
+    --hairline:#E4E1D6;
+    --brass:#A9812E;
+    --brass-ink:#5C4718;
+    --green:#2E6B4C;
+    --green-bg:#E7F0EA;
+    --brick:#9C4A34;
+    --brick-bg:#F5E7E2;
+    --blue-bg:#E8EEF3;
+    --blue-ink:#33556E;
+    --radius:10px;
+    --shadow:0 1px 2px rgba(22,22,15,.06), 0 8px 24px rgba(22,22,15,.04);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{
+    font-family:"Arial Narrow",Oswald,"Helvetica Neue Condensed",sans-serif;
+    font-weight:800;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+  }
+  .num{font-variant-numeric:tabular-nums;}
+  a{color:inherit;}
+  button{font:inherit;cursor:pointer;}
+
+  #app{display:flex;min-height:100vh;}
+
+  .rail{
+    width:220px;flex:0 0 220px;
+    background:var(--panel);
+    border-right:1px solid var(--hairline);
+    padding:20px 14px;
+    display:flex;flex-direction:column;
+    position:sticky;top:0;height:100vh;
+  }
+  .rail-brand{padding:6px 8px 18px;}
+  .rail-brand .mark{display:flex;align-items:center;gap:8px;}
+  .rail-brand .swatch{
+    width:14px;height:14px;background:var(--ink);border-radius:2px;
+    box-shadow:3px 0 0 var(--paper), 3px 0 0 1px var(--ink), 6px 0 0 var(--ink);
+  }
+  .rail-brand .title{font-size:13px;letter-spacing:.06em;}
+  .rail-brand .sub{font-size:11px;color:var(--ink-muted);margin-top:2px;}
+
+  nav.rail-nav{display:flex;flex-direction:column;gap:2px;margin-top:8px;}
+  nav.rail-nav button{
+    text-align:left;background:none;border:none;
+    padding:9px 10px;border-radius:8px;
+    font-size:13px;color:var(--ink-muted);
+    display:flex;align-items:center;gap:9px;
+  }
+  nav.rail-nav button .dot{width:6px;height:6px;border-radius:50%;background:var(--hairline);flex:0 0 auto;}
+  nav.rail-nav button.active{background:var(--paper);color:var(--ink);box-shadow:var(--shadow);font-weight:600;}
+  nav.rail-nav button.active .dot{background:var(--brass);}
+  nav.rail-nav button:hover:not(.active){background:var(--panel-2);}
+
+  .rail-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--hairline);}
+  .who{font-size:12px;color:var(--ink-muted);}
+  .who b{color:var(--ink);display:block;font-size:13px;}
+  .role-pill{
+    display:inline-block;margin-top:6px;font-size:10px;letter-spacing:.06em;
+    text-transform:uppercase;padding:3px 7px;border-radius:5px;
+    background:var(--brass);color:#fff;font-weight:700;
+  }
+  .role-pill.member{background:var(--panel-2);color:var(--ink-muted);}
+
+  main{flex:1;min-width:0;padding:28px 34px 60px;max-width:1180px;}
+
+  .page-head{margin-bottom:22px;}
+  .page-head h1{font-size:26px;margin:0 0 6px;}
+  .rule{height:0;border-top:2px solid var(--ink);position:relative;margin:8px 0 4px;}
+  .rule::after{content:"";position:absolute;left:0;top:5px;width:100%;height:1px;background:var(--hairline);}
+  .page-sub{color:var(--ink-muted);font-size:13px;margin-top:8px;}
+
+  .card{background:var(--paper);border:1px solid var(--hairline);border-radius:var(--radius);box-shadow:var(--shadow);}
+  .card + .card{margin-top:16px;}
+  .card-head{padding:14px 18px;border-bottom:1px solid var(--hairline);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .card-head h2{font-size:12px;margin:0;letter-spacing:.08em;}
+  .card-body{padding:16px 18px;}
+
+  .grid{display:grid;gap:16px;}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr);}
+  .grid.cols-2{grid-template-columns:repeat(2,1fr);}
+  @media (max-width:900px){.grid.cols-3,.grid.cols-2{grid-template-columns:1fr;}}
+
+  .stat{padding:16px 18px;}
+  .stat .label{font-size:10px;letter-spacing:.08em;color:var(--ink-muted);text-transform:uppercase;}
+  .stat .value{font-size:26px;margin-top:6px;}
+  .stat .bar{height:6px;background:var(--panel-2);border-radius:4px;margin-top:10px;overflow:hidden;}
+  .stat .bar > span{display:block;height:100%;background:var(--brass);}
+  .stat .meta{font-size:11px;color:var(--ink-muted);margin-top:6px;}
+
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-muted);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--hairline);}
+  td{padding:10px 10px;border-bottom:1px solid var(--hairline);font-size:13px;vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  tr.clickable:hover{background:var(--panel);cursor:pointer;}
+
+  .pill{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:var(--panel-2);color:var(--ink-muted);white-space:nowrap;}
+  .pill.status-not_contacted{background:var(--panel-2);color:var(--ink-muted);}
+  .pill.status-contacted,.pill.status-meeting_booked{background:var(--blue-bg);color:var(--blue-ink);}
+  .pill.status-proposal_sent,.pill.status-negotiating{background:#FBF0DC;color:var(--brass-ink);}
+  .pill.status-won{background:var(--green-bg);color:var(--green);}
+  .pill.status-lost{background:var(--brick-bg);color:var(--brick);}
+  .pill.unassigned{background:var(--brick-bg);color:var(--brick);}
+
+  .btn{border:1px solid var(--hairline);background:var(--paper);border-radius:7px;padding:7px 13px;font-size:12.5px;font-weight:600;color:var(--ink);}
+  .btn:hover{background:var(--panel);}
+  .btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .btn.primary:hover{background:#000;}
+  .btn.small{padding:5px 10px;font-size:11.5px;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+
+  select,input[type=text],input[type=number],input[type=date],textarea{
+    width:100%;border:1px solid var(--hairline);border-radius:7px;padding:8px 10px;
+    font:inherit;background:var(--paper);color:var(--ink);
+  }
+  textarea{resize:vertical;min-height:120px;font-family:inherit;}
+  label.field{display:block;font-size:11px;color:var(--ink-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+  .field-row{margin-bottom:14px;}
+
+  .empty{padding:34px 18px;text-align:center;color:var(--ink-muted);font-size:13px;}
+  .empty .display{font-size:14px;color:var(--ink);margin-bottom:4px;}
+
+  .toast{
+    position:fixed;bottom:20px;right:20px;background:var(--ink);color:var(--paper);
+    padding:11px 16px;border-radius:8px;font-size:13px;box-shadow:var(--shadow);
+    opacity:0;transform:translateY(6px);transition:.2s;pointer-events:none;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateY(0);}
+
+  .drawer-backdrop{position:fixed;inset:0;background:rgba(22,22,15,.28);opacity:0;pointer-events:none;transition:.18s;z-index:40;}
+  .drawer-backdrop.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:0;height:100vh;width:480px;max-width:92vw;
+    background:var(--paper);box-shadow:-8px 0 30px rgba(22,22,15,.12);
+    transform:translateX(100%);transition:.22s;z-index:41;display:flex;flex-direction:column;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{padding:18px 20px;border-bottom:1px solid var(--hairline);display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .drawer-head h3{margin:0 0 4px;font-size:18px;}
+  .drawer-close{border:none;background:none;font-size:20px;color:var(--ink-muted);padding:2px 6px;}
+  .drawer-body{padding:18px 20px;overflow-y:auto;flex:1;}
+  .drawer-section{margin-bottom:22px;}
+  .drawer-section h4{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin:0 0 10px;}
+
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px;}
+  .kv dt{color:var(--ink-muted);}
+  .kv dd{margin:0;}
+
+  .activity-item{padding:9px 0;border-bottom:1px solid var(--hairline);font-size:12.5px;}
+  .activity-item:last-child{border-bottom:none;}
+  .activity-item .type{font-weight:700;text-transform:capitalize;}
+  .activity-item .when{color:var(--ink-muted);font-size:11px;}
+
+  .hint-box{background:var(--blue-bg);border:1px solid #D8E3EA;border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--blue-ink);margin-bottom:14px;}
+  .hint-box b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+
+  ::selection{background:#FBEFD3;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<div class="drawer" id="drawer"></div>
+
+<script>
+const API = '';
+let ME = null;
+let TEAM = [];
+let TAB = 'dashboard';
+let PARTNERS = [];
+let TEMPLATES = [];
+
+async function api(path, opts={}) {
+  const res = await fetch(API + path, { ...opts, headers: { 'Content-Type': 'application/json', ...(opts.headers||{}) } });
+  if (!res.ok) {
+    let msg = res.statusText;
+    try { const j = await res.json(); msg = j.error || msg; } catch(e){}
+    throw new Error(msg);
+  }
+  const ct = res.headers.get('content-type') || '';
+  return ct.includes('application/json') ? res.json() : res.text();
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2600);
+}
+function fmtMoney(n) {
+  if (n === null || n === undefined) return '$0';
+  return '$' + Number(n).toLocaleString('en-US', {maximumFractionDigits:0});
+}
+function fmtDate(s) {
+  if (!s) return '—';
+  const d = new Date(s.replace(' ','T')+(s.includes('T')?'':'Z'));
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+}
+function statusLabel(s){ return (s||'').replaceAll('_',' '); }
+function teamName(id){
+  if (!id) return null;
+  const t = TEAM.find(u=>u.id===id);
+  return t ? (t.name || t.email) : id;
+}
+
+function render() {
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <aside class="rail">
+      <div class="rail-brand">
+        <div class="mark"><span class="swatch"></span><span class="title display">The Bosso Movie</span></div>
+        <div class="sub">Outreach &amp; partnerships</div>
+      </div>
+      <nav class="rail-nav">
+        ${navBtn('dashboard','Dashboard')}
+        ${navBtn('partners','Partners')}
+        ${navBtn('outreach','Outreach')}
+        ${navBtn('templates','Templates')}
+        ${navBtn('team','Team')}
+      </nav>
+      <div class="rail-foot">
+        <div class="who">
+          <b>${ME ? (ME.name || ME.email) : '…'}</b>
+          ${ME ? ME.email : ''}
+          <div><span class="role-pill ${ME && ME.role!=='admin' ? 'member':''}">${ME ? (ME.role==='admin'?'Producer / Admin':'Team member') : ''}</span></div>
+        </div>
+      </div>
+    </aside>
+    <main id="main"></main>
+  `;
+  renderTab();
+}
+function navBtn(id,label){
+  return `<button data-tab="${id}" class="${TAB===id?'active':''}" onclick="setTab('${id}')"><span class="dot"></span>${label}</button>`;
+}
+window.setTab = function(id){ TAB = id; render(); };
+
+async function renderTab(){
+  const main = document.getElementById('main');
+  main.innerHTML = `<div class="empty">Loading…</div>`;
+  try {
+    if (TAB==='dashboard') await viewDashboard(main);
+    else if (TAB==='partners') await viewPartners(main);
+    else if (TAB==='outreach') await viewOutreach(main);
+    else if (TAB==='templates') await viewTemplates(main);
+    else if (TAB==='team') await viewTeam(main);
+  } catch(e){
+    main.innerHTML = `<div class="empty">Couldn't load this — ${e.message}</div>`;
+  }
+}
+
+async function viewDashboard(main){
+  const [summary, followups] = await Promise.all([
+    api('/api/dashboard'),
+    api('/api/dashboard/followups'),
+  ]);
+  const goals = summary.goals || [];
+  const partnerRows = summary.partners || [];
+  const totalsByTrack = {};
+  partnerRows.forEach(r=>{
+    totalsByTrack[r.track] = totalsByTrack[r.track] || {won:0,inkind:0,count:0};
+    totalsByTrack[r.track].won += (r.total||0);
+    totalsByTrack[r.track].inkind += (r.in_kind||0);
+    totalsByTrack[r.track].count += (r.count||0);
+  });
+
+  main.innerHTML = `
+    <div class="page-head">
+      <h1 class="display">Dashboard</h1>
+      <div class="rule"></div>
+      <div class="page-sub">Campaign window ${fmtDate(goals[0]?.window_start)} — ${fmtDate(goals[0]?.window_end)}</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h2 class="display">Your follow-ups today</h2></div>
+      <div class="card-body">
+        ${followups.length ? `<table>
+          <thead><tr><th>Type</th><th>Notes</th><th>Due</th></tr></thead>
+          <tbody>${followups.map(f=>`
+            <tr><td style="text-transform:capitalize">${f.type||'—'}</td><td>${f.next_action||f.notes||'—'}</td><td class="num">${fmtDate(f.next_action_date)}</td></tr>
+          `).join('')}</tbody>
+        </table>` : `<div class="empty"><div class="display">All clear</div>Nothing due today — good day to prospect something new.</div>`}
+      </div>
+    </div>
+    <div class="grid cols-3" style="margin-top:16px;">
+      ${goals.map(g=>{
+        const t = totalsByTrack[g.track] || {won:0,count:0};
+        const pct = g.target_amount ? Math.min(100, Math.round((t.won/g.target_amount)*100)) : 0;
+        return `<div class="card stat">
+          <div class="label">${g.track.replaceAll('_',' ')}</div>
+          <div class="value num">${fmtMoney(t.won)} <span style="font-size:13px;color:var(--ink-muted);font-weight:400;">/ ${fmtMoney(g.target_amount)}</span></div>
+          <div class="bar"><span style="width:${pct}%"></span></div>
+          <div class="meta">${t.count||0} partner${t.count===1?'':'s'} · ${pct}% of target</div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${ME && ME.role==='admin' ? `
+      <div class="card" style="margin-top:16px;">
+        <div class="card-head">
+          <h2 class="display">AI targeting insights</h2>
+          <button class="btn small" onclick="loadInsights()">Refresh</button>
+        </div>
+        <div class="card-body" id="insightsBox">
+          <div class="empty">Click Refresh to have Claude review your current pipeline and suggest where to focus outreach next.</div>
+        </div>
+      </div>
+    ` : ''}
+  `;
+}
+window.loadInsights = async function(){
+  const box = document.getElementById('insightsBox');
+  box.innerHTML = `<div class="empty">Reviewing pipeline data…</div>`;
+  try {
+    const res = await api('/api/ai/insights');
+    box.innerHTML = `<div style="white-space:pre-wrap;font-size:13px;line-height:1.6;">${res.insight.replace(/</g,'&lt;')}</div>`;
+  } catch(e){
+    box.innerHTML = `<div class="empty">${e.message}</div>`;
+  }
+};
+
+async function viewPartners(main, filters={}){
+  const params = new URLSearchParams();
+  if (filters.track) params.set('track', filters.track);
+  if (filters.status) params.set('status', filters.status);
+  if (filters.owner) params.set('owner', filters.owner);
+  PARTNERS = await api('/api/partners' + (params.toString() ? '?'+params.toString() : ''));
+  if (!TEAM.length) TEAM = await api('/api/team');
+  const isAdmin = ME && ME.role === 'admin';
+  const view = filters.view || (window.__partnersView || 'table');
+
+  const STATUSES = ['not_contacted','contacted','meeting_booked','proposal_sent','negotiating','won','lost'];
+
+  main.innerHTML = `
+    <div class="page-head">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;">
+        <div><h1 class="display">Partners</h1><div class="rule"></div></div>
+        <button class="btn primary" onclick="openNewPartner()">+ Add partner</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center;">
+        <select id="fTrack" onchange="applyPartnerFilters()">
+          <option value="">All tracks</option>
+          <option value="corporate">Corporate</option>
+          <option value="local_community">Local community</option>
+        </select>
+        <select id="fStatus" onchange="applyPartnerFilters()">
+          <option value="">All statuses</option>
+          ${STATUSES.map(s=>`<option value="${s}">${statusLabel(s)}</option>`).join('')}
+        </select>
+        ${isAdmin ? `<select id="fOwner" onchange="applyPartnerFilters()">
+          <option value="">Everyone</option>
+          <option value="unassigned">Unassigned only</option>
+          ${TEAM.map(t=>`<option value="${t.id}">${t.name||t.email}</option>`).join('')}
+        </select>` : ''}
+        <div style="margin-left:auto;display:flex;gap:4px;">
+          <button class="btn small ${view==='table'?'primary':''}" onclick="setPartnersView('table')">Table</button>
+          <button class="btn small ${view==='kanban'?'primary':''}" onclick="setPartnersView('kanban')">Board</button>
+        </div>
+      </div>
+    </div>
+    ${view==='kanban' ? `
+      <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;">
+        ${STATUSES.map(s=>{
+          const items = PARTNERS.filter(p=>p.status===s);
+          return `<div style="min-width:230px;flex:0 0 230px;">
+            <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);font-weight:700;margin-bottom:8px;">${statusLabel(s)} <span style="color:var(--ink-muted);font-weight:400;">(${items.length})</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              ${items.map(p=>`
+                <div class="card" style="cursor:pointer;" onclick="openPartner('${p.id}')">
+                  <div class="card-body" style="padding:12px 13px;">
+                    <b style="font-size:13px;">${p.name}</b>
+                    <div style="font-size:11px;color:var(--ink-muted);margin-top:3px;">${p.owner_id ? teamName(p.owner_id) : 'Unassigned'}</div>
+                    <div class="num" style="font-size:12px;margin-top:6px;">${fmtMoney(p.value_actual)} / ${fmtMoney(p.value_target)}</div>
+                  </div>
+                </div>
+              `).join('') || `<div class="empty" style="padding:16px 8px;font-size:12px;">—</div>`}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    ` : `
+    <div class="card">
+      <div class="card-body" style="padding:0;">
+        ${PARTNERS.length ? `<table>
+          <thead><tr><th>Name</th><th>Track</th><th>Status</th><th>Owner</th><th>Target</th><th>Actual</th></tr></thead>
+          <tbody>${PARTNERS.map(p=>`
+            <tr class="clickable" onclick="openPartner('${p.id}')">
+              <td><b>${p.name}</b>${p.tier ? `<div style="font-size:11px;color:var(--ink-muted);">${p.tier.replaceAll('_',' ')}</div>`:''}</td>
+              <td>${p.track.replaceAll('_',' ')}</td>
+              <td><span class="pill status-${p.status}">${statusLabel(p.status)}</span></td>
+              <td>${p.owner_id ? teamName(p.owner_id) : '<span class="pill unassigned">Unassigned</span>'}</td>
+              <td class="num">${fmtMoney(p.value_target)}</td>
+              <td class="num">${fmtMoney(p.value_actual)}</td>
+            </tr>
+          `).join('')}</tbody>
+        </table>` : `<div class="empty"><div class="display">No partners here yet</div>Add one, or clear filters.</div>`}
+      </div>
+    </div>
+    `}
+  `;
+}
+window.setPartnersView = function(v){
+  window.__partnersView = v;
+  applyPartnerFilters();
+};
+window.applyPartnerFilters = function(){
+  const track = document.getElementById('fTrack').value;
+  const status = document.getElementById('fStatus').value;
+  const ownerEl = document.getElementById('fOwner');
+  const owner = ownerEl ? ownerEl.value : '';
+  viewPartners(document.getElementById('main'), {track, status, owner, view: window.__partnersView});
+};
+
+window.openNewPartner = function(){
+  const isAdmin = ME && ME.role === 'admin';
+  openDrawer(`
+    <div class="drawer-head"><div><h3>Add partner</h3></div><button class="drawer-close" onclick="closeDrawer()">&times;</button></div>
+    <div class="drawer-body">
+      <div class="field-row"><label class="field">Name</label><input type="text" id="npName"></div>
+      <div class="field-row"><label class="field">Track</label>
+        <select id="npTrack"><option value="corporate">Corporate</option><option value="local_community">Local community</option></select>
+      </div>
+      <div class="field-row"><label class="field">Category (industry)</label><input type="text" id="npCategory" placeholder="e.g. banking, insurance, fmcg"></div>
+      <div class="field-row"><label class="field">City</label><input type="text" id="npCity" placeholder="e.g. Bulawayo, Harare"></div>
+      <div class="field-row"><label class="field">Tier</label>
+        <select id="npTier"><option value="">—</option>
+          ${['founding_presenting','principal','official_category','product_integration','supporting','event','in_kind'].map(t=>`<option value="${t}">${t.replaceAll('_',' ')}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field-row"><label class="field">Contact name</label><input type="text" id="npContact"></div>
+      <div class="field-row"><label class="field">Contact email</label><input type="text" id="npEmail"></div>
+      <div class="field-row"><label class="field">Contact phone</label><input type="text" id="npPhone"></div>
+      <div class="field-row"><label class="field">Value target ($)</label><input type="number" id="npTarget"></div>
+      ${isAdmin ? `<div class="field-row"><label class="field">Assign to</label>
+        <select id="npOwner"><option value="">Unassigned</option>${TEAM.map(t=>`<option value="${t.id}">${t.name||t.email}</option>`).join('')}</select>
+        <button class="btn small" style="margin-top:6px;" onclick="suggestAssignment()">Suggest with AI</button>
+        <div id="npSuggestion"></div>
+      </div>` : `<div class="hint-box">New leads start unassigned — the producer will hand this out.</div>`}
+      <div class="field-row"><label class="field">Notes</label><textarea id="npNotes"></textarea></div>
+      <button class="btn primary" onclick="saveNewPartner()">Add partner</button>
+    </div>
+  `);
+};
+window.suggestAssignment = async function(){
+  const body = {
+    name: document.getElementById('npName').value,
+    track: document.getElementById('npTrack').value,
+    category: document.getElementById('npCategory').value,
+    city: document.getElementById('npCity').value,
+    notes: document.getElementById('npNotes').value,
+  };
+  if (!body.name) { toast('Add a name first'); return; }
+  const box = document.getElementById('npSuggestion');
+  box.innerHTML = `<div class="hint-box">Thinking…</div>`;
+  try {
+    const res = await api('/api/ai/suggest-assignment', {method:'POST', body: JSON.stringify(body)});
+    if (res.suggested_owner_id) document.getElementById('npOwner').value = res.suggested_owner_id;
+    if (res.suggested_tier) document.getElementById('npTier').value = res.suggested_tier;
+    box.innerHTML = `<div class="hint-box"><b>AI suggestion</b>${res.reasoning || 'Applied above.'}</div>`;
+  } catch(e){ box.innerHTML = `<div class="hint-box"><b>Couldn't suggest</b>${e.message}</div>`; }
+};
+window.saveNewPartner = async function(){
+  const body = {
+    name: document.getElementById('npName').value,
+    track: document.getElementById('npTrack').value,
+    tier: document.getElementById('npTier').value || null,
+    category: document.getElementById('npCategory').value || null,
+    city: document.getElementById('npCity').value || null,
+    contact_name: document.getElementById('npContact').value || null,
+    contact_email: document.getElementById('npEmail').value || null,
+    contact_phone: document.getElementById('npPhone').value || null,
+    value_target: Number(document.getElementById('npTarget').value) || 0,
+    notes: document.getElementById('npNotes').value || null,
+  };
+  const ownerEl = document.getElementById('npOwner');
+  if (ownerEl && ownerEl.value) body.owner_id = ownerEl.value;
+  if (!body.name || !body.track) { toast('Name and track are required'); return; }
+  try {
+    await api('/api/partners', {method:'POST', body: JSON.stringify(body)});
+    toast('Partner added');
+    closeDrawer();
+    renderTab();
+  } catch(e){ toast('Could not add: ' + e.message); }
+};
+
+window.openPartner = async function(id){
+  const [detail, hints] = await Promise.all([
+    api('/api/partners/'+id),
+    api('/api/hints?context=partner_detail').catch(()=>[]),
+  ]);
+  const isAdmin = ME && ME.role === 'admin';
+  const hint = hints.find(h => !h.tier || h.tier === detail.tier);
+
+  openDrawer(`
+    <div class="drawer-head">
+      <div><h3>${detail.name}</h3><span class="pill status-${detail.status}">${statusLabel(detail.status)}</span></div>
+      <button class="drawer-close" onclick="closeDrawer()">&times;</button>
+    </div>
+    <div class="drawer-body">
+      ${hint ? `<div class="hint-box"><b>Pitching tip</b>${hint.hint_text}</div>` : ''}
+      <div class="drawer-section">
+        <h4>Details</h4>
+        <dl class="kv">
+          <dt>Track</dt><dd>${detail.track.replaceAll('_',' ')}</dd>
+          <dt>Tier</dt><dd>${detail.tier ? detail.tier.replaceAll('_',' ') : '—'}</dd>
+          <dt>Contact</dt><dd>${detail.contact_name||'—'}</dd>
+          <dt>Email</dt><dd>${detail.contact_email||'—'}</dd>
+          <dt>Phone</dt><dd>${detail.contact_phone||'—'}</dd>
+          <dt>Target</dt><dd class="num">${fmtMoney(detail.value_target)}</dd>
+          <dt>Actual</dt><dd class="num">${fmtMoney(detail.value_actual)}</dd>
+          <dt>Owner</dt><dd>${detail.owner_id ? teamName(detail.owner_id) : 'Unassigned'}</dd>
+        </dl>
+      </div>
+      <div class="drawer-section">
+        <h4>Update</h4>
+        <div class="field-row"><label class="field">Status</label>
+          <select id="pdStatus">${['not_contacted','contacted','meeting_booked','proposal_sent','negotiating','won','lost'].map(s=>`<option value="${s}" ${s===detail.status?'selected':''}>${statusLabel(s)}</option>`).join('')}</select>
+        </div>
+        <div class="field-row"><label class="field">Actual value ($)</label><input type="number" id="pdValue" value="${detail.value_actual||0}"></div>
+        <div class="field-row"><label class="field">Notes</label><textarea id="pdNotes">${detail.notes||''}</textarea></div>
+        <button class="btn primary small" onclick="savePartnerUpdate('${detail.id}')">Save</button>
+        ${isAdmin ? `
+          <div style="margin-top:14px;">
+            <label class="field">Reassign to</label>
+            <select id="pdOwner">
+              <option value="">Unassigned</option>
+              ${TEAM.map(t=>`<option value="${t.id}" ${t.id===detail.owner_id?'selected':''}>${t.name||t.email}</option>`).join('')}
+            </select>
+            <button class="btn small" style="margin-top:8px;" onclick="reassignPartner('${detail.id}')">Reassign</button>
+          </div>` : ''}
+      </div>
+      <div class="drawer-section">
+        <h4>Log activity</h4>
+        <div class="field-row"><label class="field">Type</label>
+          <select id="actType"><option value="call">Call</option><option value="email">Email</option><option value="meeting">Meeting</option><option value="whatsapp">WhatsApp</option><option value="follow_up">Follow-up</option></select>
+        </div>
+        <div class="field-row"><label class="field">Notes</label><textarea id="actNotes" style="min-height:60px;"></textarea></div>
+        <div class="field-row"><label class="field">Next action date</label><input type="date" id="actDate"></div>
+        <button class="btn small" onclick="logPartnerActivity('${detail.id}')">Log it</button>
+      </div>
+      <div class="drawer-section">
+        <h4>Activity history</h4>
+        ${detail.activities && detail.activities.length ? detail.activities.map(a=>`
+          <div class="activity-item"><span class="type">${a.type}</span> — ${a.notes||''}<div class="when">${fmtDate(a.created_at)}${a.next_action_date ? ' · next: '+fmtDate(a.next_action_date):''}</div></div>
+        `).join('') : `<div class="empty" style="padding:14px 0;">No activity logged yet</div>`}
+      </div>
+      <div class="drawer-section">
+        <h4>Outreach sent</h4>
+        ${detail.outreach && detail.outreach.length ? detail.outreach.map(o=>`
+          <div class="activity-item"><span class="type">${o.channel}</span> · ${o.reply_status}<div class="when">${fmtDate(o.sent_at)}</div></div>
+        `).join('') : `<div class="empty" style="padding:14px 0;">Nothing sent yet — try the Outreach tab</div>`}
+      </div>
+    </div>
+  `);
+};
+window.savePartnerUpdate = async function(id){
+  const body = {
+    status: document.getElementById('pdStatus').value,
+    value_actual: Number(document.getElementById('pdValue').value) || 0,
+    notes: document.getElementById('pdNotes').value,
+  };
+  try {
+    await api('/api/partners/'+id, {method:'PATCH', body: JSON.stringify(body)});
+    toast('Saved');
+    closeDrawer();
+    renderTab();
+  } catch(e){ toast('Could not save: '+e.message); }
+};
+window.reassignPartner = async function(id){
+  const owner_id = document.getElementById('pdOwner').value || null;
+  try {
+    await api('/api/partners/'+id+'/assign', {method:'PATCH', body: JSON.stringify({owner_id})});
+    toast('Reassigned');
+    closeDrawer();
+    renderTab();
+  } catch(e){ toast('Could not reassign: '+e.message); }
+};
+window.logPartnerActivity = async function(id){
+  const body = {
+    type: document.getElementById('actType').value,
+    notes: document.getElementById('actNotes').value,
+    next_action_date: document.getElementById('actDate').value || null,
+  };
+  try {
+    await api('/api/partners/'+id+'/activity', {method:'POST', body: JSON.stringify(body)});
+    toast('Logged');
+    openPartner(id);
+  } catch(e){ toast('Could not log: '+e.message); }
+};
+
+async function viewOutreach(main){
+  if (!PARTNERS.length) PARTNERS = await api('/api/partners');
+  TEMPLATES = await api('/api/outreach/templates');
+  const reviewed = TEMPLATES.filter(t=>t.is_reviewed);
+
+  main.innerHTML = `
+    <div class="page-head">
+      <h1 class="display">Outreach</h1>
+      <div class="rule"></div>
+      <div class="page-sub">Draft a message, preview it filled in, then send or copy it out.</div>
+    </div>
+    <div class="grid cols-2">
+      <div class="card">
+        <div class="card-head"><h2 class="display">Compose</h2></div>
+        <div class="card-body">
+          <div class="field-row"><label class="field">Partner</label>
+            <select id="ocPartner"><option value="">Choose a partner…</option>${PARTNERS.map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select>
+          </div>
+          <div class="field-row"><label class="field">Template</label>
+            <select id="ocTemplate"><option value="">Choose a template…</option>${reviewed.map(t=>`<option value="${t.id}" data-channel="${t.channel}">${t.name} (${t.channel})</option>`).join('')}</select>
+          </div>
+          <button class="btn small" onclick="renderOutreachDraft()">Fill draft</button>
+          <div class="field-row" style="margin-top:16px;">
+            <label class="field">Or: describe what you want, AI drafts it</label>
+            <textarea id="ocBrief" placeholder="e.g. Short warm nudge to CBZ, referencing our first call about the crest usage"></textarea>
+          </div>
+          <button class="btn small" onclick="draftWithAI()">Draft with AI</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2 class="display">Message</h2></div>
+        <div class="card-body" id="ocDraftArea">
+          <div class="empty">Fill a template or draft with AI to preview a message here.</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+window.renderOutreachDraft = async function(){
+  const partnerId = document.getElementById('ocPartner').value;
+  const templateSel = document.getElementById('ocTemplate');
+  const templateId = templateSel.value;
+  if (!partnerId || !templateId) { toast('Pick a partner and a template'); return; }
+  const channel = templateSel.selectedOptions[0].dataset.channel;
+  try {
+    const draft = await api('/api/outreach/render', {method:'POST', body: JSON.stringify({partner_id:partnerId, template_id:templateId})});
+    showDraftArea(partnerId, templateId, channel, draft.subject, draft.body);
+  } catch(e){ toast('Could not render: '+e.message); }
+};
+window.draftWithAI = async function(){
+  const brief = document.getElementById('ocBrief').value;
+  const partnerId = document.getElementById('ocPartner').value;
+  if (!brief) { toast('Describe what you want first'); return; }
+  const partner = PARTNERS.find(p=>p.id===partnerId);
+  try {
+    const res = await api('/api/ai/draft', {method:'POST', body: JSON.stringify({brief, track: partner?.track, tier: partner?.tier})});
+    showDraftArea(partnerId, '', 'email', null, res.draft);
+  } catch(e){ toast('AI draft failed: '+e.message); }
+};
+function showDraftArea(partnerId, templateId, channel, subject, body){
+  const area = document.getElementById('ocDraftArea');
+  area.innerHTML = `
+    ${subject!==null ? `<div class="field-row"><label class="field">Subject</label><input type="text" id="ocSubject" value="${(subject||'').replace(/"/g,'&quot;')}"></div>` : ''}
+    <div class="field-row"><label class="field">Body</label><textarea id="ocBody" style="min-height:220px;">${body}</textarea></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${channel==='email' ? `<button class="btn primary small" onclick="sendEmail('${partnerId}','${templateId}')">Send email</button>` : ''}
+      <button class="btn small" onclick="copyDraft()">Copy text</button>
+      <button class="btn small" onclick="markSent('${partnerId}','${templateId}','${channel}')">Mark as sent (manual)</button>
+    </div>
+  `;
+}
+window.copyDraft = function(){
+  const body = document.getElementById('ocBody').value;
+  navigator.clipboard.writeText(body).then(()=>toast('Copied'));
+};
+window.sendEmail = async function(partnerId, templateId){
+  const subjectEl = document.getElementById('ocSubject');
+  const body = document.getElementById('ocBody').value;
+  try {
+    await api('/api/outreach/send', {method:'POST', body: JSON.stringify({
+      partner_id: partnerId, template_id: templateId||null, channel:'email',
+      subject: subjectEl ? subjectEl.value : null, final_body: body,
+    })});
+    toast('Sent');
+  } catch(e){ toast('Send failed: '+e.message); }
+};
+window.markSent = async function(partnerId, templateId, channel){
+  const body = document.getElementById('ocBody').value;
+  try {
+    if (channel==='whatsapp') {
+      await api('/api/outreach/whatsapp-sent', {method:'POST', body: JSON.stringify({partner_id:partnerId, template_id:templateId||null, final_body:body})});
+    } else {
+      await api('/api/outreach/email-sent', {method:'POST', body: JSON.stringify({partner_id:partnerId, template_id:templateId||null, final_body:body})});
+    }
+    toast('Logged as sent');
+  } catch(e){ toast('Could not log: '+e.message); }
+};
+
+async function viewTemplates(main){
+  TEMPLATES = await api('/api/outreach/templates');
+  const isAdmin = ME && ME.role === 'admin';
+  main.innerHTML = `
+    <div class="page-head">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+        <div><h1 class="display">Templates</h1><div class="rule"></div></div>
+        <button class="btn primary" onclick="openNewTemplate()">+ New template</button>
+      </div>
+      <div class="page-sub">New templates need admin review before the team can use them.</div>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0;">
+        <table>
+          <thead><tr><th>Name</th><th>Channel</th><th>Track</th><th>Status</th></tr></thead>
+          <tbody>${TEMPLATES.map(t=>`
+            <tr>
+              <td><b>${t.name}</b></td>
+              <td>${t.channel}</td>
+              <td>${t.track||'—'}</td>
+              <td>${t.is_reviewed ? `<span class="pill status-won">Reviewed</span>` : `<span class="pill status-not_contacted">Draft</span>${isAdmin?` <button class="btn small" onclick="reviewTemplate('${t.id}')">Approve</button>`:''}`}</td>
+            </tr>
+          `).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+window.openNewTemplate = function(){
+  openDrawer(`
+    <div class="drawer-head"><div><h3>New template</h3></div><button class="drawer-close" onclick="closeDrawer()">&times;</button></div>
+    <div class="drawer-body">
+      <div class="field-row"><label class="field">Name</label><input type="text" id="tName"></div>
+      <div class="field-row"><label class="field">Channel</label><select id="tChannel"><option value="email">Email</option><option value="whatsapp">WhatsApp</option></select></div>
+      <div class="field-row"><label class="field">Track</label><select id="tTrack"><option value="">Any</option><option value="corporate">Corporate</option><option value="local_community">Local community</option></select></div>
+      <div class="field-row"><label class="field">Subject (email only)</label><input type="text" id="tSubject"></div>
+      <div class="field-row"><label class="field">Body — use {{contact_name}}, {{company_name}}, {{tier}}</label><textarea id="tBody" style="min-height:180px;"></textarea></div>
+      <button class="btn primary" onclick="saveTemplate()">Save (as draft)</button>
+    </div>
+  `);
+};
+window.saveTemplate = async function(){
+  const body = {
+    name: document.getElementById('tName').value,
+    channel: document.getElementById('tChannel').value,
+    track: document.getElementById('tTrack').value || null,
+    subject: document.getElementById('tSubject').value || null,
+    body: document.getElementById('tBody').value,
+  };
+  if (!body.name || !body.body) { toast('Name and body are required'); return; }
+  try {
+    await api('/api/outreach/templates', {method:'POST', body: JSON.stringify(body)});
+    toast('Template saved as draft — needs admin review');
+    closeDrawer();
+    renderTab();
+  } catch(e){ toast('Could not save: '+e.message); }
+};
+window.reviewTemplate = async function(id){
+  try {
+    await api('/api/outreach/templates/'+id+'/review', {method:'PATCH'});
+    toast('Approved');
+    renderTab();
+  } catch(e){ toast('Could not approve: '+e.message); }
+};
+
+async function viewTeam(main){
+  TEAM = await api('/api/team');
+  const isAdmin = ME && ME.role === 'admin';
+  main.innerHTML = `
+    <div class="page-head">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+        <div><h1 class="display">Team</h1><div class="rule"></div></div>
+        ${isAdmin ? `<button class="btn primary" onclick="openAddTeamMember()">+ Add team member</button>` : ''}
+      </div>
+      <div class="page-sub">${isAdmin ? "You assign who owns each partner, and can give each person a default track to focus on." : 'Only the producer assigns partner ownership.'}</div>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0;">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Assigned track</th>${isAdmin?'<th></th>':''}</tr></thead>
+          <tbody>${TEAM.map(t=>`
+            <tr>
+              <td><b>${t.name||'—'}</b></td>
+              <td>${t.email}</td>
+              <td><span class="pill ${t.role==='admin'?'status-won':''}">${t.role==='admin'?'Producer / Admin':'Team member'}</span></td>
+              <td>
+                ${isAdmin && t.role!=='admin' ? `
+                  <select onchange="setAssignedTrack('${t.id}', this.value)" style="width:auto;padding:4px 8px;font-size:12px;">
+                    <option value="" ${!t.assigned_track?'selected':''}>Any</option>
+                    <option value="corporate" ${t.assigned_track==='corporate'?'selected':''}>Corporate</option>
+                    <option value="local_community" ${t.assigned_track==='local_community'?'selected':''}>Local community</option>
+                  </select>
+                ` : (t.assigned_track ? t.assigned_track.replaceAll('_',' ') : '—')}
+              </td>
+              ${isAdmin ? `<td>${t.id!==ME.id ? `<button class="btn small" onclick="toggleRole('${t.id}','${t.role}')">${t.role==='admin'?'Make member':'Make admin'}</button>`:''}</td>` : ''}
+            </tr>
+          `).join('')}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+window.setAssignedTrack = async function(id, assigned_track){
+  try {
+    await api('/api/team/'+id, {method:'PATCH', body: JSON.stringify({assigned_track: assigned_track || null})});
+    toast('Updated');
+    TEAM = await api('/api/team');
+  } catch(e){ toast('Could not update: '+e.message); }
+};
+window.openAddTeamMember = function(){
+  openDrawer(`
+    <div class="drawer-head"><div><h3>Add team member</h3></div><button class="drawer-close" onclick="closeDrawer()">&times;</button></div>
+    <div class="drawer-body">
+      <div class="hint-box"><b>Note</b>This registers them in the system. They still log in themselves via Cloudflare Access — make sure their email is also added to the Access policy.</div>
+      <div class="field-row"><label class="field">Name</label><input type="text" id="tmName"></div>
+      <div class="field-row"><label class="field">Email</label><input type="text" id="tmEmail"></div>
+      <div class="field-row"><label class="field">Role</label><select id="tmRole"><option value="team_member">Team member</option><option value="admin">Admin</option></select></div>
+      <div class="field-row"><label class="field">Default track</label><select id="tmTrack"><option value="">Any</option><option value="corporate">Corporate</option><option value="local_community">Local community</option></select></div>
+      <button class="btn primary" onclick="saveTeamMember()">Add</button>
+    </div>
+  `);
+};
+window.saveTeamMember = async function(){
+  const body = {
+    name: document.getElementById('tmName').value,
+    email: document.getElementById('tmEmail').value,
+    role: document.getElementById('tmRole').value,
+    assigned_track: document.getElementById('tmTrack').value || null,
+  };
+  if (!body.email) { toast('Email is required'); return; }
+  try {
+    await api('/api/team', {method:'POST', body: JSON.stringify(body)});
+    toast('Added');
+    closeDrawer();
+    renderTab();
+  } catch(e){ toast('Could not add: '+e.message); }
+};
+window.toggleRole = async function(id, currentRole){
+  const role = currentRole === 'admin' ? 'team_member' : 'admin';
+  try {
+    await api('/api/team/'+id, {method:'PATCH', body: JSON.stringify({role})});
+    toast('Updated');
+    renderTab();
+  } catch(e){ toast('Could not update: '+e.message); }
+};
+
+function openDrawer(html){
+  document.getElementById('drawer').innerHTML = html;
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawerBackdrop').classList.add('open');
+}
+window.closeDrawer = function(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+};
+document.getElementById('drawerBackdrop').addEventListener('click', closeDrawer);
+
+(async function boot(){
+  try {
+    ME = await api('/api/me');
+    TEAM = await api('/api/team');
+  } catch(e){
+    document.getElementById('app').innerHTML = `<div class="empty" style="margin:60px auto;max-width:400px;"><div class="display">Couldn't load your profile</div>${e.message}</div>`;
+    return;
+  }
+  render();
+})();
+</script>
+</body>
+</html>
