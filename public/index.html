@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bosso Movie — Be Part of the Film</title>
+<style>
+  :root {
+    --bosso-black: #0a0a0a;
+    --bosso-white: #ffffff;
+    --bosso-red: #c8102e; /* confirm exact hex against Highlanders' official brand guide */
+  }
+  * { box-sizing: border-box; }
+  body { font-family: 'Georgia', serif; background: var(--bosso-black); color: var(--bosso-white); margin: 0; }
+  .hero { padding: 60px 20px; text-align: center; border-bottom: 3px solid var(--bosso-red); }
+  .hero h1 { letter-spacing: 2px; margin-bottom: 4px; }
+  .hero p { color: #ccc; }
+  .milestone-tracker { display: flex; justify-content: center; gap: 16px; padding: 24px 20px; flex-wrap: wrap; }
+  .milestone { padding: 10px 18px; border: 1px solid var(--bosso-red); border-radius: 20px; font-size: 0.85em; }
+  .milestone.done { background: var(--bosso-red); border-color: var(--bosso-red); }
+  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+  .tier-card { border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; background: #111; }
+  .tier-card.sold-out { opacity: 0.45; }
+  .tier-card h3 { color: var(--bosso-red); margin-top: 0; font-size: 1.15em; }
+  .tier-price { font-size: 1.6em; font-weight: bold; margin-bottom: 12px; }
+  .tier-card ul { padding-left: 20px; line-height: 1.6; color: #ddd; font-size: 0.95em; }
+  .cta-button {
+    display: block; width: 100%; padding: 14px; margin-top: 16px;
+    background: var(--bosso-red); color: var(--bosso-white); border: none; border-radius: 6px;
+    font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
+  }
+  .sold-out .cta-button { background: #333; color: #777; cursor: not-allowed; pointer-events: none; }
+  .slot-note { font-size: 0.85em; color: #999; margin-top: 8px; }
+  footer { text-align: center; padding: 30px; color: #666; font-size: 0.85em; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>THE BOSSO MOVIE</h1>
+  <p>An officially licensed Highlanders FC feature film — be part of the story.</p>
+</div>
+
+<div class="milestone-tracker" id="milestones">
+  <div class="milestone done">Script Locked</div>
+  <div class="milestone done">Pre-production Funding Secured</div>
+  <div class="milestone">Cameras Roll</div>
+  <div class="milestone">Premiere Night</div>
+</div>
+
+<div class="tiers" id="tier-grid">
+
+  <div class="tier-card" data-tier="amahlolanyama">
+    <h3>Digital Supporter — Amahlolanyama</h3>
+    <div class="tier-price">$10 – $15</div>
+    <ul>
+      <li>Digital thank-you card</li>
+      <li>Exclusive cinematic wallpaper set</li>
+    </ul>
+    <a href="#" class="cta-button" onclick="startCheckout('amahlolanyama', this)">Join the Team Sheet</a>
+  </div>
+
+  <div class="tier-card" data-tier="ezikabosso">
+    <h3>Fan Tier — EzikaBosso</h3>
+    <div class="tier-price">$30 – $45</div>
+    <ul>
+      <li>Signed thank-you card (reproduced signature)</li>
+      <li>Vintage-style enamel mug</li>
+      <li>End credits mention</li>
+    </ul>
+    <a href="#" class="cta-button" onclick="startCheckout('ezikabosso', this)">Get on the Silver Screen</a>
+  </div>
+
+  <div class="tier-card" data-tier="asisozasala">
+    <h3>Production Crew Tier — Asisozasala</h3>
+    <div class="tier-price">$75 – $100</div>
+    <ul>
+      <li>Official crew uniform t-shirt</li>
+      <li>Laser-engraved steel bottle</li>
+      <li>All Fan Tier rewards included</li>
+    </ul>
+    <a href="#" class="cta-button" onclick="startCheckout('asisozasala', this)">Suit Up</a>
+  </div>
+
+  <div class="tier-card" data-tier="siyinqaba_bulawayo">
+    <h3>Premiere Ticket — Siyinqaba (Bulawayo)</h3>
+    <div class="tier-price">$150 – $200</div>
+    <ul>
+      <li>VIP red carpet premiere ticket</li>
+      <li>Post-screening Q&amp;A with cast &amp; director</li>
+      <li>All Crew Tier rewards included</li>
+    </ul>
+    <div class="slot-note" id="slots-siyinqaba_bulawayo">Loading availability…</div>
+    <a href="#" class="cta-button" onclick="startCheckout('siyinqaba', this, 'bulawayo')">Reserve Your Seat</a>
+  </div>
+
+  <div class="tier-card" data-tier="siyinqaba_harare">
+    <h3>Premiere Ticket — Siyinqaba (Harare)</h3>
+    <div class="tier-price">$150 – $200</div>
+    <ul>
+      <li>VIP red carpet premiere ticket</li>
+      <li>Post-screening Q&amp;A with cast &amp; director</li>
+      <li>All Crew Tier rewards included</li>
+    </ul>
+    <div class="slot-note" id="slots-siyinqaba_harare">Loading availability…</div>
+    <a href="#" class="cta-button" onclick="startCheckout('siyinqaba', this, 'harare')">Reserve Your Seat</a>
+  </div>
+
+  <div class="tier-card" data-tier="boardroom_bulawayo">
+    <h3>The Boardroom (Bulawayo)</h3>
+    <div class="tier-price">$500+</div>
+    <ul>
+      <li>4× VIP red carpet premiere tickets</li>
+      <li>"Associate Producer" credit (incl. IMDb)</li>
+      <li>4× complete merchandise packs</li>
+    </ul>
+    <div class="slot-note" id="slots-boardroom_bulawayo">Loading availability…</div>
+    <a href="#" class="cta-button" onclick="startCheckout('boardroom', this, 'bulawayo')">Become a Stakeholder</a>
+  </div>
+
+  <div class="tier-card" data-tier="diaspora_solo">
+    <h3>Diaspora Solo Stream</h3>
+    <div class="tier-price">$20 – $30</div>
+    <ul>
+      <li>Secure single-device streaming link</li>
+      <li>Live at the same time as the in-cinema premiere</li>
+    </ul>
+    <a href="#" class="cta-button" onclick="startCheckout('diaspora_solo', this)">Watch Live</a>
+  </div>
+
+  <div class="tier-card" data-tier="diaspora_host_uk">
+    <h3>Diaspora Watch Party Host — UK</h3>
+    <div class="tier-price">$75 – $120</div>
+    <ul>
+      <li>Group-display streaming link (TV/projector rated)</li>
+      <li>Official "Bosso Premiere Night" host status</li>
+      <li>Bulk merch pack for your gathering</li>
+    </ul>
+    <div class="slot-note" id="slots-diaspora_host_uk">Loading availability…</div>
+    <a href="#" class="cta-button" onclick="startCheckout('diaspora_host', this, 'uk')">Host a Premiere Night</a>
+  </div>
+
+</div>
+
+<footer>Ya-Sibo Media (Private) Limited t/a Junza Studios, in co-production with Highlanders Football Club.</footer>
+
+<script>
+async function loadSlotAvailability() {
+  const res = await fetch('/api/public/tier-caps');
+  const caps = await res.json();
+  caps.forEach(cap => {
+    const el = document.getElementById(`slots-${cap.tier}`);
+    if (!el) return;
+    const remaining = cap.max_slots - cap.slots_taken;
+    if (remaining <= 0) {
+      el.closest('.tier-card').classList.add('sold-out');
+      el.textContent = 'SOLD OUT';
+    } else {
+      el.textContent = `${remaining} of ${cap.max_slots} remaining`;
+    }
+  });
+}
+
+async function startCheckout(tier, btnEl, city) {
+  btnEl.textContent = 'Redirecting…';
+  const res = await fetch('/api/public/checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tier, city: city || null }),
+  });
+  const { paynow_url } = await res.json();
+  window.location.href = paynow_url;
+}
+
+loadSlotAvailability();
+</script>
+</body>
+</html>

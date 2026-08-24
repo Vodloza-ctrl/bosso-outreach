@@ -1,0 +1,30 @@
+name = "bosso-outreach-tool"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bosso"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+[[kv_namespaces]]
+binding = "OUTREACH_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+[[r2_buckets]]
+binding = "ASSETS"
+bucket_name = "bosso-outreach-assets"
+
+[vars]
+CAMPAIGN_START = "2026-08-24"
+CAMPAIGN_END = "2026-10-15"
+DIASPORA_MERCH_CUTOFF = "2026-10-30"
+
+# Add these as encrypted secrets via `wrangler secret put <NAME>`, do not hardcode:
+#   ANTHROPIC_API_KEY
+#   PAYNOW_INTEGRATION_ID
+#   PAYNOW_INTEGRATION_KEY
+
+[[routes]]
+pattern = "outreach.yourdomain.co.zw/*"
+zone_name = "yourdomain.co.zw"
