@@ -1,4 +1,4 @@
-name = "bosso-outreach-tool"
+name = "ebossomovieoutreachtool"
 main = "src/worker.js"
 compatibility_date = "2026-01-01"
 
