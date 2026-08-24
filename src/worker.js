@@ -442,7 +442,7 @@ async function handleTeam(request, { env, user }) {
 
   // GET /api/team — anyone logged in can see the roster (not sensitive)
   if (method === 'GET' && url.pathname === '/api/team') {
-    const { results } = await env.DB.prepare('SELECT id, name, email, role, created_at FROM users ORDER BY name').all();
+    const { results } = await env.DB.prepare('SELECT id, name, email, role, assigned_track, created_at FROM users ORDER BY name').all();
     return json(results);
   }
 
@@ -453,18 +453,18 @@ async function handleTeam(request, { env, user }) {
     if (user.role !== 'admin') return json({ error: 'admin only' }, { status: 403 });
     const b = await request.json();
     const id = newId('user');
-    await env.DB.prepare('INSERT INTO users (id, name, email, role) VALUES (?, ?, ?, ?)')
-      .bind(id, b.name || null, b.email, b.role || 'team_member').run();
+    await env.DB.prepare('INSERT INTO users (id, name, email, role, assigned_track) VALUES (?, ?, ?, ?, ?)')
+      .bind(id, b.name || null, b.email, b.role || 'team_member', b.assigned_track || null).run();
     return json({ id }, { status: 201 });
   }
 
-  // PATCH /api/team/:id — admin changes someone's name/role
+  // PATCH /api/team/:id — admin changes someone's name/role/assigned track
   const roleMatch = url.pathname.match(/^\/api\/team\/([\w-]+)$/);
   if (method === 'PATCH' && roleMatch) {
     if (user.role !== 'admin') return json({ error: 'admin only' }, { status: 403 });
     const b = await request.json();
-    await env.DB.prepare('UPDATE users SET role = COALESCE(?, role), name = COALESCE(?, name) WHERE id = ?')
-      .bind(b.role ?? null, b.name ?? null, roleMatch[1]).run();
+    await env.DB.prepare('UPDATE users SET role = COALESCE(?, role), name = COALESCE(?, name), assigned_track = ? WHERE id = ?')
+      .bind(b.role ?? null, b.name ?? null, b.assigned_track === undefined ? null : b.assigned_track, roleMatch[1]).run();
     return json({ ok: true });
   }
 
@@ -523,10 +523,10 @@ async function handlePartners(request, { env, user }) {
     // unassigned until an admin hands it out via PATCH /:id/assign.
     const owner_id = user.role === 'admin' ? (body.owner_id || null) : null;
     await env.DB.prepare(`
-      INSERT INTO partners (id, name, track, tier, category, contact_name, contact_phone, contact_email, value_target, owner_id, notes)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO partners (id, name, track, tier, category, city, contact_name, contact_phone, contact_email, value_target, owner_id, notes)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
-      id, body.name, body.track, body.tier || null, body.category || null,
+      id, body.name, body.track, body.tier || null, body.category || null, body.city || null,
       body.contact_name || null, body.contact_phone || null, body.contact_email || null,
       body.value_target || 0, owner_id, body.notes || null
     ).run();
@@ -544,10 +544,11 @@ async function handlePartners(request, { env, user }) {
       SET status = COALESCE(?, status),
           value_actual = COALESCE(?, value_actual),
           in_kind_value = COALESCE(?, in_kind_value),
+          city = COALESCE(?, city),
           notes = COALESCE(?, notes),
           updated_at = datetime('now')
       WHERE id = ?
-    `).bind(body.status ?? null, body.value_actual ?? null, body.in_kind_value ?? null, body.notes ?? null, id).run();
+    `).bind(body.status ?? null, body.value_actual ?? null, body.in_kind_value ?? null, body.city ?? null, body.notes ?? null, id).run();
 
     if (body.status && body.status !== existing.status) {
       await logActivity(env, {
@@ -754,41 +755,144 @@ Hard rules:
 - Never use donation/charity/fundraising language for crowdfunding copy — frame it as producer credit, access, or belonging.
 - Never invent statistics, dollar figures, or promises not given in the brief.`;
 
-async function handleAI(request, { env }) {
+async function handleAI(request, { env, user }) {
   const url = new URL(request.url);
-  if (request.method !== 'POST' || url.pathname !== '/api/ai/draft') {
-    return json({ error: 'not found' }, { status: 404 });
+
+  if (request.method === 'POST' && url.pathname === '/api/ai/draft') {
+    const { brief, track, tier, tone, rewrite_of } = await request.json();
+
+    const userContent = rewrite_of
+      ? `Rewrite the following for tone "${tone || 'professional'}":\n\n${rewrite_of}\n\nInstruction: ${brief}`
+      : brief;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: `${BRAND_VOICE}\n\nTrack: ${track || 'n/a'}. Tier: ${tier || 'n/a'}.`,
+        messages: [{ role: 'user', content: userContent }],
+      }),
+    });
+
+    if (!response.ok) {
+      return json({ error: 'AI draft failed', detail: await response.text() }, { status: 502 });
+    }
+
+    const data = await response.json();
+    const draft = data.content.filter((b) => b.type === 'text').map((b) => b.text).join('\n');
+
+    return json({ draft, reviewed: false });
   }
 
-  const { brief, track, tier, tone, rewrite_of } = await request.json();
+  // POST /api/ai/suggest-assignment  { name, track, category, tier, notes, city }
+  // Suggests who on the team should own a NEW lead, and a tier if one wasn't
+  // given — based on each member's assigned track (see /api/team) and their
+  // current open-lead workload. This is a fresh suggestion each call, not a
+  // model that trains on your data over time.
+  if (request.method === 'POST' && url.pathname === '/api/ai/suggest-assignment') {
+    const { name, track, category, notes, city } = await request.json();
 
-  const userContent = rewrite_of
-    ? `Rewrite the following for tone "${tone || 'professional'}":\n\n${rewrite_of}\n\nInstruction: ${brief}`
-    : brief;
+    const [{ results: team }, { results: workload }] = await Promise.all([
+      env.DB.prepare("SELECT id, name, role, assigned_track FROM users WHERE role != 'admin'").all(),
+      env.DB.prepare(`
+        SELECT owner_id, COUNT(*) as open_count
+        FROM partners WHERE status NOT IN ('won','lost') AND owner_id IS NOT NULL
+        GROUP BY owner_id
+      `).all(),
+    ]);
+    const workloadMap = Object.fromEntries(workload.map((w) => [w.owner_id, w.open_count]));
+    const roster = team.map((t) => ({
+      id: t.id, name: t.name,
+      assigned_track: t.assigned_track || 'any',
+      open_leads: workloadMap[t.id] || 0,
+    }));
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1000,
-      system: `${BRAND_VOICE}\n\nTrack: ${track || 'n/a'}. Tier: ${tier || 'n/a'}.`,
-      messages: [{ role: 'user', content: userContent }],
-    }),
-  });
+    if (!roster.length) {
+      return json({ suggested_owner_id: null, suggested_tier: null, reasoning: 'No team members registered yet — add some under Team first.' });
+    }
 
-  if (!response.ok) {
-    return json({ error: 'AI draft failed', detail: await response.text() }, { status: 502 });
+    const prompt = `New lead:
+Name: ${name}
+Track: ${track}
+Category: ${category || 'unspecified'}
+City: ${city || 'unspecified'}
+Notes: ${notes || 'none'}
+
+Team roster (id, name, their assigned track, current open lead count):
+${roster.map((r) => `- ${r.id} | ${r.name} | track: ${r.assigned_track} | open leads: ${r.open_leads}`).join('\n')}
+
+Suggest which team member should own this lead — prefer someone whose assigned track matches this lead's track, then whoever has the fewest open leads among matching/unassigned-track members. Also suggest a partner tier from: founding_presenting, principal, official_category, product_integration, supporting, event, in_kind — pick the best fit for a lead of this size/category, or your best guess if unclear.
+
+Respond with ONLY this JSON, no other text, no markdown fences:
+{"suggested_owner_id": "<id or null>", "suggested_tier": "<tier>", "reasoning": "<one or two sentences>"}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 400,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    if (!response.ok) return json({ error: 'AI suggestion failed', detail: await response.text() }, { status: 502 });
+    const data = await response.json();
+    const text = data.content.filter((b) => b.type === 'text').map((b) => b.text).join('').trim();
+    let parsed;
+    try {
+      parsed = JSON.parse(text.replace(/^```json\s*|\s*```$/g, ''));
+    } catch (e) {
+      return json({ error: 'Could not parse AI response', raw: text }, { status: 502 });
+    }
+    return json(parsed);
   }
 
-  const data = await response.json();
-  const draft = data.content.filter((b) => b.type === 'text').map((b) => b.text).join('\n');
+  // GET /api/ai/insights — admin only. Pulls a snapshot of your actual pipeline
+  // (grouped by track/category/city/status) and asks Claude to synthesize
+  // targeting recommendations. This runs fresh on every request — it reads
+  // your current data each time, it does not "learn" or improve on its own
+  // between calls.
+  if (request.method === 'GET' && url.pathname === '/api/ai/insights') {
+    if (user.role !== 'admin') return json({ error: 'admin only' }, { status: 403 });
 
-  return json({ draft, reviewed: false });
+    const { results: stats } = await env.DB.prepare(`
+      SELECT track, category, city, status, COUNT(*) as count, SUM(value_actual) as won_value
+      FROM partners GROUP BY track, category, city, status
+    `).all();
+
+    if (!stats.length) return json({ error: 'Not enough data yet — add and update some partners first.' }, { status: 400 });
+
+    const prompt = `Here is our partner pipeline data, grouped by track/category/city/status (count of partners and total won value in each group):
+
+${JSON.stringify(stats, null, 2)}
+
+Based ONLY on this data, write:
+1. Which sectors/categories and cities appear to be converting best (won vs total) and worst — call out plainly if the data is too thin to conclude anything meaningful for a given slice.
+2. Two or three concrete targeting recommendations for where to focus outreach next.
+3. A short (under 150 words) example outreach opening line calibrated to whatever seems to be working best.
+
+Be direct and specific. If the data is too sparse to say anything reliable, say so plainly rather than inventing patterns.`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 900,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    if (!response.ok) return json({ error: 'AI insights failed', detail: await response.text() }, { status: 502 });
+    const data = await response.json();
+    const insight = data.content.filter((b) => b.type === 'text').map((b) => b.text).join('\n');
+    return json({ insight, computed_at: Date.now() });
+  }
+
+  return json({ error: 'not found' }, { status: 404 });
 }
 
 // ---------------------------------------------------------------------------
