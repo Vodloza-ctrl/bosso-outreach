@@ -1,18 +1,28 @@
 name = "bosso-outreach-tool"
-main = "src/index.js"
+main = "src/worker.js"
 compatibility_date = "2026-01-01"
+
+# Serves public/index.html and any other static files in that folder.
+# "binding" here MUST be named "ASSETS" — that's the reserved name Cloudflare
+# uses for static-asset serving. Do NOT reuse this name anywhere else.
+[assets]
+directory = "./public"
+binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "bosso"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "71f6f97f-9df0-41a3-b5a0-057ef0067068"
 
 [[kv_namespaces]]
 binding = "OUTREACH_KV"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+id = "cea4aa3f8b424cd087e3f11dc138d4f1"
 
+# Renamed from "ASSETS" to "ASSET_FILES" — "ASSETS" is now taken by the
+# [assets] static-file block above. worker.js reads this bucket as
+# env.ASSET_FILES (see loadAttachmentFromR2).
 [[r2_buckets]]
-binding = "ASSETS"
+binding = "ASSET_FILES"
 bucket_name = "bosso-outreach-assets"
 
 [vars]
@@ -20,11 +30,18 @@ CAMPAIGN_START = "2026-08-24"
 CAMPAIGN_END = "2026-10-15"
 DIASPORA_MERCH_CUTOFF = "2026-10-30"
 
-# Add these as encrypted secrets via `wrangler secret put <NAME>`, do not hardcode:
+# Add these as encrypted secrets via the dashboard (Settings > Variables and Secrets)
+# or `wrangler secret put <NAME>` if you ever use the CLI — do not hardcode:
 #   ANTHROPIC_API_KEY
 #   PAYNOW_INTEGRATION_ID
 #   PAYNOW_INTEGRATION_KEY
+#   CF_ACCOUNT_ID
+#   CF_STREAM_API_TOKEN
+#   PREMIERE_VIDEO_ID_HARARE
+#   PREMIERE_VIDEO_ID_BULAWAYO
 
-[[routes]]
-pattern = "outreach.yourdomain.co.zw/*"
-zone_name = "yourdomain.co.zw"
+# Leave this out entirely until you have a real custom domain attached —
+# an unresolved zone_name here can make `wrangler deploy` fail outright.
+# [[routes]]
+# pattern = "outreach.yourdomain.co.zw/*"
+# zone_name = "yourdomain.co.zw"
