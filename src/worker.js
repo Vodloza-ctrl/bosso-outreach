@@ -14,7 +14,13 @@
 //   Bindings:
 //     D1 database         -> binding name: DB              (database: bosso)
 //     KV namespace        -> binding name: OUTREACH_KV
-//     R2 bucket           -> binding name: ASSETS           (bucket: bosso-outreach-assets)
+//     R2 bucket           -> binding name: ASSET_FILES      (bucket: bosso-outreach-assets)
+//                            NOTE: do NOT name this binding "ASSETS" — if you deploy
+//                            public/index.html via Cloudflare's static-assets build
+//                            (Build output directory = public), that feature claims
+//                            the binding name "ASSETS" for itself. Two bindings sharing
+//                            one name silently breaks one of them, so this R2 bucket
+//                            binding is deliberately named ASSET_FILES instead.
 //     Email binding       -> binding name: SEND_EMAIL       (Settings > Email Workers, after verifying your sending domain)
 //   Variables (plain text):
 //     CAMPAIGN_START = 2026-08-24
@@ -156,7 +162,7 @@ async function sendEmail(env, { to, subject, body, attachments = [] }) {
 }
 
 async function loadAttachmentFromR2(env, asset) {
-  const object = await env.ASSETS.get(asset.file_key);
+  const object = await env.ASSET_FILES.get(asset.file_key);
   if (!object) throw new Error(`Asset not found in R2: ${asset.file_key}`);
   const buf = await object.arrayBuffer();
   const bytes = new Uint8Array(buf);
@@ -286,6 +292,186 @@ async function handleContributions(request, { env }) {
 }
 
 // ---------------------------------------------------------------------------
+// SECTION 5b — reply guides + pitching hints (previously unwired — reply_guides
+// and hints existed in D1 with no route serving them at all)
+// ---------------------------------------------------------------------------
+
+async function handleReplyGuides(request, { env }) {
+  const url = new URL(request.url);
+  if (request.method !== 'GET' || url.pathname !== '/api/reply-guides') {
+    return json({ error: 'not found' }, { status: 404 });
+  }
+  const trigger_status = url.searchParams.get('trigger_status');
+  const track = url.searchParams.get('track');
+  let query = 'SELECT * FROM reply_guides WHERE 1=1';
+  const binds = [];
+  if (trigger_status) { query += ' AND trigger_status = ?'; binds.push(trigger_status); }
+  if (track) { query += ' AND track = ?'; binds.push(track); }
+  const { results } = await env.DB.prepare(query).bind(...binds).all();
+  return json(results);
+}
+
+async function handleHints(request, { env }) {
+  const url = new URL(request.url);
+  if (request.method !== 'GET' || url.pathname !== '/api/hints') {
+    return json({ error: 'not found' }, { status: 404 });
+  }
+  const context = url.searchParams.get('context');
+  const track = url.searchParams.get('track');
+  const tier = url.searchParams.get('tier');
+  let query = 'SELECT * FROM hints WHERE 1=1';
+  const binds = [];
+  if (context) { query += ' AND context = ?'; binds.push(context); }
+  if (track) { query += ' AND track = ?'; binds.push(track); }
+  if (tier) { query += ' AND tier = ?'; binds.push(tier); }
+  const { results } = await env.DB.prepare(query).bind(...binds).all();
+  return json(results);
+}
+
+// ---------------------------------------------------------------------------
+// SECTION 5c — directories: in-kind partners, community reps, contributor
+// wall (name + tier only — never amounts, per the "no public running total" rule)
+// ---------------------------------------------------------------------------
+
+async function handleDirectories(request, { env }) {
+  const url = new URL(request.url);
+  const method = request.method;
+
+  if (method === 'GET' && url.pathname === '/api/in-kind-partners') {
+    const { results } = await env.DB.prepare('SELECT * FROM in_kind_partners ORDER BY created_at DESC').all();
+    return json(results);
+  }
+  if (method === 'POST' && url.pathname === '/api/in-kind-partners') {
+    const b = await request.json();
+    const id = newId('inkind');
+    await env.DB.prepare(`
+      INSERT INTO in_kind_partners (id, name, contribution_type, estimated_value, linked_partner_id, status, notes)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).bind(id, b.name, b.contribution_type || null, b.estimated_value || null, b.linked_partner_id || null, b.status || 'pledged', b.notes || null).run();
+    return json({ id }, { status: 201 });
+  }
+
+  if (method === 'GET' && url.pathname === '/api/community-reps') {
+    const { results } = await env.DB.prepare('SELECT * FROM community_reps ORDER BY created_at DESC').all();
+    return json(results);
+  }
+  if (method === 'POST' && url.pathname === '/api/community-reps') {
+    const b = await request.json();
+    const id = newId('rep');
+    await env.DB.prepare(`
+      INSERT INTO community_reps (id, name, branch_area, phone, role, notes)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(id, b.name, b.branch_area || null, b.phone || null, b.role || null, b.notes || null).run();
+    return json({ id }, { status: 201 });
+  }
+
+  // Contributor directory — name + tier only, never amounts. Matches the
+  // "no public running totals" rule from the strategy digest.
+  if (method === 'GET' && url.pathname === '/api/directories/contributors') {
+    const { results } = await env.DB.prepare(`
+      SELECT contributor_name, tier, city, created_at
+      FROM contributions WHERE show_on_supporter_wall = 1
+      ORDER BY created_at DESC
+    `).all();
+    return json(results);
+  }
+
+  return json({ error: 'not found' }, { status: 404 });
+}
+
+// ---------------------------------------------------------------------------
+// SECTION 5d — PR / social content calendar (content_posts had no route at all)
+// ---------------------------------------------------------------------------
+
+async function handleContentPosts(request, { env, user }) {
+  const url = new URL(request.url);
+  const method = request.method;
+
+  if (method === 'GET' && url.pathname === '/api/content-posts') {
+    const status = url.searchParams.get('status');
+    const partner_id = url.searchParams.get('partner_id');
+    let query = 'SELECT * FROM content_posts WHERE 1=1';
+    const binds = [];
+    if (status) { query += ' AND status = ?'; binds.push(status); }
+    if (partner_id) { query += ' AND linked_partner_id = ?'; binds.push(partner_id); }
+    query += ' ORDER BY COALESCE(scheduled_date, posted_date) ASC';
+    const { results } = await env.DB.prepare(query).bind(...binds).all();
+    return json(results);
+  }
+
+  if (method === 'POST' && url.pathname === '/api/content-posts') {
+    const b = await request.json();
+    const id = newId('post');
+    await env.DB.prepare(`
+      INSERT INTO content_posts (id, platform, post_type, linked_partner_id, status, scheduled_date, owner_id, notes)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(id, b.platform, b.post_type || null, b.linked_partner_id || null, b.status || 'planned', b.scheduled_date || null, user.id, b.notes || null).run();
+    return json({ id }, { status: 201 });
+  }
+
+  const patchMatch = url.pathname.match(/^\/api\/content-posts\/([\w-]+)$/);
+  if (method === 'PATCH' && patchMatch) {
+    const id = patchMatch[1];
+    const b = await request.json();
+    await env.DB.prepare(`
+      UPDATE content_posts
+      SET status = COALESCE(?, status),
+          scheduled_date = COALESCE(?, scheduled_date),
+          posted_date = COALESCE(?, posted_date),
+          notes = COALESCE(?, notes)
+      WHERE id = ?
+    `).bind(b.status ?? null, b.scheduled_date ?? null, b.posted_date ?? null, b.notes ?? null, id).run();
+    return json({ ok: true });
+  }
+
+  return json({ error: 'not found' }, { status: 404 });
+}
+
+// ---------------------------------------------------------------------------
+// SECTION 5e — team management: admin assigns roles + partner ownership.
+// Previously, POST /api/partners silently made the CREATOR the owner —
+// meaning two team members could each "claim" the same lead independently,
+// with no single source of truth for who's actually working it. Now:
+// only an admin can assign or reassign ownership; a non-admin creating a
+// partner leaves it unassigned until the admin hands it out.
+// ---------------------------------------------------------------------------
+
+async function handleTeam(request, { env, user }) {
+  const url = new URL(request.url);
+  const method = request.method;
+
+  // GET /api/team — anyone logged in can see the roster (not sensitive)
+  if (method === 'GET' && url.pathname === '/api/team') {
+    const { results } = await env.DB.prepare('SELECT id, name, email, role, created_at FROM users ORDER BY name').all();
+    return json(results);
+  }
+
+  // POST /api/team — admin adds a team member row. Cloudflare Access still
+  // controls who can actually log in; this just registers them in D1 so the
+  // Worker's own lookup (getUserByEmail) recognizes them once they do.
+  if (method === 'POST' && url.pathname === '/api/team') {
+    if (user.role !== 'admin') return json({ error: 'admin only' }, { status: 403 });
+    const b = await request.json();
+    const id = newId('user');
+    await env.DB.prepare('INSERT INTO users (id, name, email, role) VALUES (?, ?, ?, ?)')
+      .bind(id, b.name || null, b.email, b.role || 'team_member').run();
+    return json({ id }, { status: 201 });
+  }
+
+  // PATCH /api/team/:id — admin changes someone's name/role
+  const roleMatch = url.pathname.match(/^\/api\/team\/([\w-]+)$/);
+  if (method === 'PATCH' && roleMatch) {
+    if (user.role !== 'admin') return json({ error: 'admin only' }, { status: 403 });
+    const b = await request.json();
+    await env.DB.prepare('UPDATE users SET role = COALESCE(?, role), name = COALESCE(?, name) WHERE id = ?')
+      .bind(b.role ?? null, b.name ?? null, roleMatch[1]).run();
+    return json({ ok: true });
+  }
+
+  return json({ error: 'not found' }, { status: 404 });
+}
+
+// ---------------------------------------------------------------------------
 // SECTION 6 — partners / pipeline (was src/routes/partners.js)
 // ---------------------------------------------------------------------------
 
@@ -296,11 +482,19 @@ async function handlePartners(request, { env, user }) {
   if (method === 'GET' && url.pathname === '/api/partners') {
     const track = url.searchParams.get('track');
     const status = url.searchParams.get('status');
+    const owner = url.searchParams.get('owner'); // a user id, or 'unassigned'
     let query = 'SELECT * FROM partners WHERE 1=1';
     const binds = [];
     if (track) { query += ' AND track = ?'; binds.push(track); }
     if (status) { query += ' AND status = ?'; binds.push(status); }
-    if (user.role !== 'admin') { query += ' AND owner_id = ?'; binds.push(user.id); }
+    if (owner === 'unassigned') {
+      query += ' AND owner_id IS NULL';
+    } else if (owner) {
+      query += ' AND owner_id = ?'; binds.push(owner);
+    } else if (user.role !== 'admin') {
+      // Team members default to seeing only what's been assigned to them.
+      query += ' AND owner_id = ?'; binds.push(user.id);
+    }
     query += ' ORDER BY updated_at DESC';
     const { results } = await env.DB.prepare(query).bind(...binds).all();
     return json(results);
@@ -323,13 +517,18 @@ async function handlePartners(request, { env, user }) {
   if (method === 'POST' && url.pathname === '/api/partners') {
     const body = await request.json();
     const id = newId('partner');
+    // Ownership is admin-assigned, not self-claimed — a non-admin adding a
+    // lead does NOT automatically become its owner, so two team members
+    // can't each end up "owning" the same partner independently. It sits
+    // unassigned until an admin hands it out via PATCH /:id/assign.
+    const owner_id = user.role === 'admin' ? (body.owner_id || null) : null;
     await env.DB.prepare(`
       INSERT INTO partners (id, name, track, tier, category, contact_name, contact_phone, contact_email, value_target, owner_id, notes)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       id, body.name, body.track, body.tier || null, body.category || null,
       body.contact_name || null, body.contact_phone || null, body.contact_email || null,
-      body.value_target || 0, user.id, body.notes || null
+      body.value_target || 0, owner_id, body.notes || null
     ).run();
     return json({ id }, { status: 201 });
   }
@@ -356,6 +555,22 @@ async function handlePartners(request, { env, user }) {
         type: 'status_change', notes: `${existing.status} -> ${body.status}`,
       });
     }
+    return json({ ok: true });
+  }
+
+  // PATCH /api/partners/:id/assign  { owner_id }  — admin only.
+  // The single point where partner ownership actually changes hands.
+  const assignMatch = url.pathname.match(/^\/api\/partners\/([\w-]+)\/assign$/);
+  if (method === 'PATCH' && assignMatch) {
+    if (user.role !== 'admin') return json({ error: 'admin only — only the producer assigns ownership' }, { status: 403 });
+    const id = assignMatch[1];
+    const b = await request.json();
+    await env.DB.prepare("UPDATE partners SET owner_id = ?, updated_at = datetime('now') WHERE id = ?")
+      .bind(b.owner_id || null, id).run();
+    await logActivity(env, {
+      linkedTable: 'partners', linkedId: id, userId: user.id,
+      type: 'status_change', notes: b.owner_id ? `Assigned to ${b.owner_id}` : 'Unassigned',
+    });
     return json({ ok: true });
   }
 
@@ -775,6 +990,13 @@ export default {
     if (url.pathname.startsWith('/api/ai')) return handleAI(request, routeCtx);
     if (url.pathname.startsWith('/api/dashboard')) return handleDashboard(request, routeCtx);
     if (url.pathname.startsWith('/api/diaspora')) return handleDiaspora(request, routeCtx);
+    if (url.pathname.startsWith('/api/reply-guides')) return handleReplyGuides(request, routeCtx);
+    if (url.pathname.startsWith('/api/hints')) return handleHints(request, routeCtx);
+    if (url.pathname.startsWith('/api/in-kind-partners') || url.pathname.startsWith('/api/community-reps') || url.pathname.startsWith('/api/directories')) {
+      return handleDirectories(request, routeCtx);
+    }
+    if (url.pathname.startsWith('/api/content-posts')) return handleContentPosts(request, routeCtx);
+    if (url.pathname.startsWith('/api/team')) return handleTeam(request, routeCtx);
 
     return new Response('Not found', { status: 404 });
   },
