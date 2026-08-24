@@ -1,178 +1,919 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Bosso Movie — Be Part of the Film</title>
-<style>
-  :root {
-    --bosso-black: #0a0a0a;
-    --bosso-white: #ffffff;
-    --bosso-red: #c8102e; /* confirm exact hex against Highlanders' official brand guide */
-  }
-  * { box-sizing: border-box; }
-  body { font-family: 'Georgia', serif; background: var(--bosso-black); color: var(--bosso-white); margin: 0; }
-  .hero { padding: 60px 20px; text-align: center; border-bottom: 3px solid var(--bosso-red); }
-  .hero h1 { letter-spacing: 2px; margin-bottom: 4px; }
-  .hero p { color: #ccc; }
-  .milestone-tracker { display: flex; justify-content: center; gap: 16px; padding: 24px 20px; flex-wrap: wrap; }
-  .milestone { padding: 10px 18px; border: 1px solid var(--bosso-red); border-radius: 20px; font-size: 0.85em; }
-  .milestone.done { background: var(--bosso-red); border-color: var(--bosso-red); }
-  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
-  .tier-card { border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; background: #111; }
-  .tier-card.sold-out { opacity: 0.45; }
-  .tier-card h3 { color: var(--bosso-red); margin-top: 0; font-size: 1.15em; }
-  .tier-price { font-size: 1.6em; font-weight: bold; margin-bottom: 12px; }
-  .tier-card ul { padding-left: 20px; line-height: 1.6; color: #ddd; font-size: 0.95em; }
-  .cta-button {
-    display: block; width: 100%; padding: 14px; margin-top: 16px;
-    background: var(--bosso-red); color: var(--bosso-white); border: none; border-radius: 6px;
-    font-weight: bold; cursor: pointer; text-align: center; text-decoration: none;
-  }
-  .sold-out .cta-button { background: #333; color: #777; cursor: not-allowed; pointer-events: none; }
-  .slot-note { font-size: 0.85em; color: #999; margin-top: 8px; }
-  footer { text-align: center; padding: 30px; color: #666; font-size: 0.85em; }
-</style>
-</head>
-<body>
+Yes. Given the system you are already building, I would **not build a generic CRM**. I would build an **AI-assisted corporate partnership operating system specifically for The Bosso at 100**.
 
-<div class="hero">
-  <h1>THE BOSSO MOVIE</h1>
-  <p>An officially licensed Highlanders FC feature film — be part of the story.</p>
-</div>
+The objective is not merely to send emails. It should move a company through:
 
-<div class="milestone-tracker" id="milestones">
-  <div class="milestone done">Script Locked</div>
-  <div class="milestone done">Pre-production Funding Secured</div>
-  <div class="milestone">Cameras Roll</div>
-  <div class="milestone">Premiere Night</div>
-</div>
+**Target → Research → Contact → Conversation → Proposal → Negotiation → Commitment → Payment → Activation**
 
-<div class="tiers" id="tier-grid">
+That matters because your campaign is heavily dependent on sponsorship/advertising: the strategy targets **$73,000 of $111,000 projected revenue** from sponsorship, advertising and crowdfunding, with a recommended anchor sponsor of **$15,000–$25,000**. 
 
-  <div class="tier-card" data-tier="amahlolanyama">
-    <h3>Digital Supporter — Amahlolanyama</h3>
-    <div class="tier-price">$10 – $15</div>
-    <ul>
-      <li>Digital thank-you card</li>
-      <li>Exclusive cinematic wallpaper set</li>
-    </ul>
-    <a href="#" class="cta-button" onclick="startCheckout('amahlolanyama', this)">Join the Team Sheet</a>
-  </div>
+## What I would build
 
-  <div class="tier-card" data-tier="ezikabosso">
-    <h3>Fan Tier — EzikaBosso</h3>
-    <div class="tier-price">$30 – $45</div>
-    <ul>
-      <li>Signed thank-you card (reproduced signature)</li>
-      <li>Vintage-style enamel mug</li>
-      <li>End credits mention</li>
-    </ul>
-    <a href="#" class="cta-button" onclick="startCheckout('ezikabosso', this)">Get on the Silver Screen</a>
-  </div>
+Call it something internal like **Bosso 100 Partnership Engine**.
 
-  <div class="tier-card" data-tier="asisozasala">
-    <h3>Production Crew Tier — Asisozasala</h3>
-    <div class="tier-price">$75 – $100</div>
-    <ul>
-      <li>Official crew uniform t-shirt</li>
-      <li>Laser-engraved steel bottle</li>
-      <li>All Fan Tier rewards included</li>
-    </ul>
-    <a href="#" class="cta-button" onclick="startCheckout('asisozasala', this)">Suit Up</a>
-  </div>
+Mobile-first PWA:
 
-  <div class="tier-card" data-tier="siyinqaba_bulawayo">
-    <h3>Premiere Ticket — Siyinqaba (Bulawayo)</h3>
-    <div class="tier-price">$150 – $200</div>
-    <ul>
-      <li>VIP red carpet premiere ticket</li>
-      <li>Post-screening Q&amp;A with cast &amp; director</li>
-      <li>All Crew Tier rewards included</li>
-    </ul>
-    <div class="slot-note" id="slots-siyinqaba_bulawayo">Loading availability…</div>
-    <a href="#" class="cta-button" onclick="startCheckout('siyinqaba', this, 'bulawayo')">Reserve Your Seat</a>
-  </div>
+```text
+Cloudflare Pages
+       │
+       ▼
+React / HTML / JS frontend
+       │
+       ▼
+Cloudflare Worker API
+       │
+ ┌─────┼───────────────┐
+ ▼     ▼               ▼
+D1    R2             AI API
+CRM   Documents      Research/
+                    Personalisation
+```
 
-  <div class="tier-card" data-tier="siyinqaba_harare">
-    <h3>Premiere Ticket — Siyinqaba (Harare)</h3>
-    <div class="tier-price">$150 – $200</div>
-    <ul>
-      <li>VIP red carpet premiere ticket</li>
-      <li>Post-screening Q&amp;A with cast &amp; director</li>
-      <li>All Crew Tier rewards included</li>
-    </ul>
-    <div class="slot-note" id="slots-siyinqaba_harare">Loading availability…</div>
-    <a href="#" class="cta-button" onclick="startCheckout('siyinqaba', this, 'harare')">Reserve Your Seat</a>
-  </div>
+Your existing `users`, `partners`, `goals`, `activities`, `outreach_log`, placement inventory and content systems become the underlying CRM.
 
-  <div class="tier-card" data-tier="boardroom_bulawayo">
-    <h3>The Boardroom (Bulawayo)</h3>
-    <div class="tier-price">$500+</div>
-    <ul>
-      <li>4× VIP red carpet premiere tickets</li>
-      <li>"Associate Producer" credit (incl. IMDb)</li>
-      <li>4× complete merchandise packs</li>
-    </ul>
-    <div class="slot-note" id="slots-boardroom_bulawayo">Loading availability…</div>
-    <a href="#" class="cta-button" onclick="startCheckout('boardroom', this, 'bulawayo')">Become a Stakeholder</a>
-  </div>
+The important difference is that **AI sits on top of the CRM and recommends what the team should do next.**
 
-  <div class="tier-card" data-tier="diaspora_solo">
-    <h3>Diaspora Solo Stream</h3>
-    <div class="tier-price">$20 – $30</div>
-    <ul>
-      <li>Secure single-device streaming link</li>
-      <li>Live at the same time as the in-cinema premiere</li>
-    </ul>
-    <a href="#" class="cta-button" onclick="startCheckout('diaspora_solo', this)">Watch Live</a>
-  </div>
+---
 
-  <div class="tier-card" data-tier="diaspora_host_uk">
-    <h3>Diaspora Watch Party Host — UK</h3>
-    <div class="tier-price">$75 – $120</div>
-    <ul>
-      <li>Group-display streaming link (TV/projector rated)</li>
-      <li>Official "Bosso Premiere Night" host status</li>
-      <li>Bulk merch pack for your gathering</li>
-    </ul>
-    <div class="slot-note" id="slots-diaspora_host_uk">Loading availability…</div>
-    <a href="#" class="cta-button" onclick="startCheckout('diaspora_host', this, 'uk')">Host a Premiere Night</a>
-  </div>
+# 1. The home screen should be a sales command centre
 
-</div>
+When you open it on your phone, you shouldn't see a conventional CRM dashboard full of charts.
 
-<footer>Ya-Sibo Media (Private) Limited t/a Junza Studios, in co-production with Highlanders Football Club.</footer>
+You should see:
 
-<script>
-async function loadSlotAvailability() {
-  const res = await fetch('/api/public/tier-caps');
-  const caps = await res.json();
-  caps.forEach(cap => {
-    const el = document.getElementById(`slots-${cap.tier}`);
-    if (!el) return;
-    const remaining = cap.max_slots - cap.slots_taken;
-    if (remaining <= 0) {
-      el.closest('.tier-card').classList.add('sold-out');
-      el.textContent = 'SOLD OUT';
-    } else {
-      el.textContent = `${remaining} of ${cap.max_slots} remaining`;
-    }
-  });
-}
+### TODAY
 
-async function startCheckout(tier, btnEl, city) {
-  btnEl.textContent = 'Redirecting…';
-  const res = await fetch('/api/public/checkout', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ tier, city: city || null }),
-  });
-  const { paynow_url } = await res.json();
-  window.location.href = paynow_url;
-}
+**12 actions requiring attention**
 
-loadSlotAvailability();
-</script>
-</body>
-</html>
+| Company        | Stage          | Action                  |
+| -------------- | -------------- | ----------------------- |
+| CBZ            | Proposal sent  | Follow up today         |
+| Delta          | Meeting booked | Prepare meeting brief   |
+| Old Mutual     | Contacted      | Find decision maker     |
+| Nyaradzo       | No response    | Send second touch       |
+| National Foods | Research       | Identify marketing lead |
+
+Then:
+
+### CAMPAIGN
+
+**Corporate target: $73,000**
+
+```text
+Committed       $25,000
+Negotiating     $18,000
+Proposals       $30,000
+Pipeline        $91,000
+```
+
+And:
+
+**Anchor sponsor:** Not secured
+
+That gives you an immediate answer to:
+
+> "What should I be doing right now to get this project funded?"
+
+---
+
+# 2. AI company research
+
+This is probably the most valuable feature.
+
+You enter:
+
+> CBZ
+
+The system creates a **Partner Intelligence Card**.
+
+### CBZ Bank
+
+**Category:** Banking
+**Potential tier:** Principal / Official
+**Target:** $15,000–$25,000
+**Club conflict:** Check
+**Strategic fit:** High
+
+Then AI produces:
+
+### Why CBZ could care
+
+* Financial inclusion
+* Zimbabwean heritage
+* Youth/community engagement
+* National visibility
+* Centenary cultural significance
+
+### Recommended pitch
+
+> Position The Bosso at 100 as a national heritage and community storytelling property rather than simply a football film.
+
+### Recommended package
+
+**Principal Partner — $20,000**
+
+### Relevant inventory
+
+* In-film integration
+* Marketing campaign
+* Premiere
+* Community screenings
+* Digital content
+
+The rate card gives you the actual commercial structure: Principal is $15,000–$25,000, Official $5,000–$12,000, Community $1,500–$5,000 and Event from $2,000/in-kind. 
+
+The AI should **not invent packages**. It should assemble recommendations from your approved inventory.
+
+---
+
+# 3. AI should score every prospect
+
+Give every company a score out of 100.
+
+For example:
+
+### CBZ
+
+**Partner Score: 87/100**
+
+```text
+Strategic fit       22/25
+Audience fit        20/20
+Category availability 15/15
+Budget potential    18/20
+Relationship access  7/10
+Timing               5/10
+```
+
+Then:
+
+> **Recommendation: PRIORITY A**
+
+That gives your team a rational way to decide where to spend time.
+
+Your strategy specifically identifies banking/fintech, insurance, media/broadcast, hospitality and gold/mining-adjacent companies as complementary categories, while warning against categories where Highlanders already has partners. 
+
+So your AI scoring engine should understand those rules.
+
+---
+
+# 4. The killer feature: AI-generated outreach
+
+Don't make the team write every message.
+
+Click:
+
+**Generate Outreach**
+
+The system knows:
+
+```text
+Company
+Contact
+Industry
+Campaign
+Recommended tier
+Their strategic fit
+Previous communication
+Current pipeline stage
+Relevant film inventory
+```
+
+And generates:
+
+### Initial email
+
+Short.
+
+Business-oriented.
+
+Not:
+
+> "We are making an exciting film and would love your support."
+
+Instead:
+
+> "We are currently selecting a principal banking partner for The Bosso at 100..."
+
+It should explain **why them**, what is being offered and what the next step is.
+
+Then generate:
+
+* Email
+* LinkedIn message
+* WhatsApp message
+* Follow-up
+* Meeting request
+* Proposal introduction
+
+The team approves before sending.
+
+**Do not allow autonomous AI sending initially.**
+
+Human approval is important for corporate relationships.
+
+---
+
+# 5. Outreach sequence engine
+
+This is where the system becomes much more powerful than a spreadsheet.
+
+For every prospect:
+
+```text
+DAY 0
+Initial email
+
+       ↓
+
+DAY 2
+LinkedIn / WhatsApp touch
+
+       ↓
+
+DAY 5
+Follow-up
+
+       ↓
+
+DAY 10
+Value/inventory follow-up
+
+       ↓
+
+DAY 17
+Final polite follow-up
+
+       ↓
+
+NURTURE
+30-day reminder
+```
+
+But the AI should adapt the sequence.
+
+If they reply:
+
+> "Please send the proposal."
+
+The system immediately changes:
+
+**Status → proposal_sent**
+
+and creates:
+
+> Follow up in 3 business days.
+
+If:
+
+> "We are interested in the community aspect."
+
+AI changes the recommended pitch toward:
+
+**Community Partner / Event Partner**
+
+rather than continuing to sell Principal.
+
+---
+
+# 6. Relationship intelligence
+
+Every interaction should become structured information.
+
+You might have:
+
+```text
+CBZ
+│
+├── Initial email
+├── WhatsApp
+├── Meeting
+├── Proposal
+├── Follow-up
+└── Negotiation
+```
+
+AI periodically summarises:
+
+> **Relationship status:** Warm
+> **Interest:** High
+> **Objection:** Budget approval
+> **Decision maker:** Marketing
+> **Next action:** Provide revised Principal package
+> **Probability:** 65%
+
+This means when Tatenda opens the account, he doesn't have to read 15 messages to understand what's happening.
+
+---
+
+# 7. Meeting intelligence
+
+This could be extremely useful.
+
+Before a meeting:
+
+### AI Meeting Brief
+
+**CBZ × The Bosso at 100**
+
+**Objective:** Secure Principal Partner
+
+**Ask:** $20,000
+
+**Their likely interests:**
+
+* National heritage
+* Community engagement
+* Brand visibility
+
+**Our assets:**
+
+* Feature-film integration
+* Broadcast
+* Streaming
+* Community screenings
+* Premiere
+
+**Don't lead with:**
+
+* Production costs
+* "We need money"
+* Generic advertising
+
+**Lead with:**
+
+* Centenary
+* Highlanders audience
+* Cultural significance
+* Category exclusivity
+
+Then after the meeting you can dictate into your phone:
+
+> "They like the project but $20,000 requires approval from the marketing director..."
+
+AI converts that into structured CRM data.
+
+---
+
+# 8. Proposal generator
+
+This is another major feature.
+
+Click:
+
+**Generate Proposal**
+
+The system pulls:
+
+```text
+Partner
+Company logo
+Contact
+Recommended tier
+Price
+Deliverables
+Visibility inventory
+Campaign information
+Payment milestones
+Project information
+```
+
+Then produces a branded PDF.
+
+So instead of manually building a proposal every time:
+
+**CBZ → Principal Partner → $20,000**
+
+generates the relevant proposal.
+
+And:
+
+**Hotel X → Event Partner → $2,500 + accommodation**
+
+generates a completely different one.
+
+This is especially important because your rate card deliberately keeps Principal/Official pricing out of public circulation and positions the prospectus as an enquiry-driven sales tool. 
+
+---
+
+# 9. The system should understand your inventory
+
+This is where your `placement_scenes` table becomes powerful.
+
+Instead of AI simply saying:
+
+> "Offer product placement."
+
+It can search your actual inventory.
+
+For example:
+
+### Available placement
+
+**Scene 17**
+
+Restaurant scene
+
+**Category:** Hospitality
+
+**Visibility:** A — Story
+
+**Status:** Open
+
+Then AI can say:
+
+> "This company could be integrated naturally into Scene 17."
+
+That is much more sophisticated than ordinary sponsorship software.
+
+You essentially create a **film advertising inventory database**.
+
+---
+
+# 10. Corporate conflict engine
+
+This is critical because Highlanders already has commercial relationships.
+
+Your system should have:
+
+### Category conflict
+
+```text
+Kit/Apparel       LOCKED
+Sports Nutrition  LOCKED
+Title Sponsorship LOCKED
+Banking           OPEN
+Insurance         OPEN
+Hospitality       OPEN
+Media             OPEN
+Mining            OPEN
+```
+
+If someone tries to create:
+
+> Principal Partner — Sports Nutrition
+
+the system should warn:
+
+> **CATEGORY CONFLICT**
+>
+> Highlanders existing commercial inventory may restrict this category. Confirm with club commercial office before proceeding.
+
+Your strategy explicitly says to avoid categories where Highlanders already has partners. 
+
+---
+
+# 11. AI pipeline forecasting
+
+This is where you connect it to your `goals` table.
+
+Suppose:
+
+```text
+Corporate target: $73,000
+```
+
+Pipeline:
+
+```text
+Principal
+CBZ          $20k   70%
+Old Mutual   $20k   50%
+Delta        $20k   40%
+
+Official
+Nyaradzo     $10k   60%
+National Foods $8k  50%
+
+Community
+SMEs         $15k   30%
+```
+
+AI calculates:
+
+### Weighted pipeline
+
+**$42,000**
+
+Then:
+
+> You are currently unlikely to hit the $73,000 corporate target.
+
+And recommends:
+
+> Add 8–12 qualified prospects in banking, insurance, hospitality and mining.
+
+That is far more useful than merely displaying:
+
+**"23 companies in pipeline."**
+
+---
+
+# 12. AI tells you where to spend your time
+
+Every morning:
+
+### PRIORITY ACTIONS
+
+**1. Old Mutual — CALL TODAY**
+
+Reason:
+
+> Proposal opened 4 days ago and no response. High strategic fit and potential $20k Principal deal.
+
+**2. National Foods — FOLLOW UP**
+
+Reason:
+
+> Marketing contact identified and company aligns with FMCG/Event Partner opportunity.
+
+**3. Delta — MEETING PREP**
+
+Reason:
+
+> Meeting scheduled tomorrow. Recommend Event/Official package rather than Principal based on current engagement.
+
+This turns the software into an **AI sales manager**.
+
+---
+
+# 13. Contact discovery
+
+You can have a button:
+
+**Find Decision Maker**
+
+AI researches public sources and returns:
+
+```text
+Company
+↓
+Marketing Director
+↓
+Corporate Affairs
+↓
+Brand Manager
+↓
+Sponsorship Manager
+```
+
+But this should **not automatically scrape private information**.
+
+Store only legitimate business contact information and preferably the public source.
+
+Your strategy already identifies several possible contacts but specifically says their titles should be verified before outreach. 
+
+The software should therefore show:
+
+**CONTACT VERIFIED: YES/NO**
+
+rather than assuming the database is correct.
+
+---
+
+# 14. WhatsApp should be built in
+
+For Zimbabwe this is important.
+
+A salesperson should be able to open:
+
+**Partner → WhatsApp**
+
+and get a pre-generated message.
+
+For example:
+
+> Good afternoon Matthew. I'm reaching out regarding...
+
+But again:
+
+**Generate → Review → Send**
+
+rather than uncontrolled automation.
+
+You already have experience with WhatsApp/ManyChat infrastructure, so this fits naturally into the broader stack.
+
+---
+
+# 15. Mobile-first field mode
+
+This should be designed for someone walking around Bulawayo with a phone.
+
+Not a desktop CRM shrunk down to mobile.
+
+### One-hand interface
+
+```text
+CBZ
+━━━━━━━━━━━━━━
+
+PRINCIPAL
+$15k–$25k
+
+87 SCORE
+
+[ CALL ]
+[ WHATSAPP ]
+[ EMAIL ]
+
+NEXT ACTION
+Follow up today
+
+[ ADD NOTE ]
+
+[ LOG ACTIVITY ]
+```
+
+At a networking event you could meet someone from a company and immediately:
+
+**Add contact → Company → Category → Notes → Follow-up date**
+
+in under 30 seconds.
+
+---
+
+# 16. "Business Card → CRM"
+
+This is an excellent AI feature for physical networking.
+
+Take a photograph of a business card.
+
+AI extracts:
+
+```text
+Name
+Company
+Position
+Phone
+Email
+```
+
+Then:
+
+> **Possible existing company found: Delta Corporation**
+
+**Merge with existing prospect?**
+
+Yes.
+
+Now you've added the contact without typing.
+
+---
+
+# 17. Corporate target generator
+
+I'd also build:
+
+### **Find 50 Prospects**
+
+You select:
+
+```text
+Target:
+Corporate
+
+Categories:
+Banking
+Insurance
+Hospitality
+Mining
+
+Minimum potential:
+$5,000
+
+Location:
+Zimbabwe
+```
+
+AI generates a prospect list.
+
+But **this should be a research assistant, not an indiscriminate email spam machine**.
+
+The campaign's economics are relationship-driven; your strategy specifically concludes that paid advertising is poor for closing anchor sponsors and that earned media/relationships are stronger. 
+
+---
+
+# 18. Separate corporate and community engines
+
+This is important.
+
+Don't treat:
+
+**CBZ**
+
+and
+
+**Bulawayo City Council**
+
+the same way.
+
+### CORPORATE
+
+```text
+Research
+→ Decision maker
+→ Pitch
+→ Proposal
+→ Negotiation
+→ Contract
+→ Payment
+→ Activation
+```
+
+### CIVIC / COMMUNITY
+
+```text
+Institution
+→ Relationship
+→ Request
+→ Meeting
+→ Facilitation
+→ Agreement
+→ Activation
+```
+
+So the system understands that **Bulawayo City Council isn't a $10,000 sales prospect**.
+
+---
+
+# 19. Campaign intelligence dashboard
+
+At the top level:
+
+### THE BOSSO AT 100
+
+**Funding Target**
+
+$111,000
+
+**Production Budget**
+
+$25,650
+
+**Corporate Target**
+
+$73,000
+
+**Corporate Secured**
+
+$XX,XXX
+
+**Pipeline**
+
+$XX,XXX
+
+**Weighted Pipeline**
+
+$XX,XXX
+
+**Anchor Sponsor**
+
+Not secured / Secured
+
+**Days to campaign deadline**
+
+XX
+
+Then:
+
+### Pipeline by category
+
+```text
+Banking       $40k
+Insurance     $25k
+Hospitality   $12k
+Mining        $20k
+Media         $10k
+SME           $8k
+```
+
+This gives you a genuine **fundraising operating system**, not just a contact database.
+
+---
+
+# 20. The technology stack I'd use
+
+Given what you've already built, I'd keep it simple.
+
+### Frontend
+
+**Cloudflare Pages**
+
+PWA/mobile interface.
+
+### Backend
+
+**Cloudflare Workers**
+
+API, authentication, business logic, AI orchestration.
+
+### Database
+
+**Cloudflare D1**
+
+You already have the schema foundation.
+
+### Storage
+
+**Cloudflare R2**
+
+Store:
+
+* Logos
+* Proposal PDFs
+* Decks
+* Contracts
+* Contact documents
+* Creative assets
+
+### AI
+
+Use an LLM API through the Worker for:
+
+* Company research summarisation
+* Lead scoring
+* Personalisation
+* Outreach generation
+* Meeting briefs
+* Follow-up recommendations
+* Pipeline analysis
+* Proposal drafting
+
+### Search/research
+
+A web-search layer for current company information and decision-maker verification.
+
+### Communications
+
+* Email provider/API
+* WhatsApp Business API
+* Optional SMS later
+
+### Analytics
+
+Your own D1 queries initially. Don't introduce a heavyweight BI system yet.
+
+---
+
+# The most important design principle
+
+**Don't build an AI email spammer.**
+
+Build an **AI-assisted relationship sales machine**.
+
+Your target is not:
+
+> Send 10,000 emails.
+
+Your target is:
+
+> Identify 100 high-value companies → get the right person → establish relevance → secure 20 serious conversations → produce 10 proposals → close 1–3 anchor/official partners.
+
+For a campaign where the Principal tier alone is **$15,000–$25,000** and Official is **$5,000–$12,000**, one or two good relationships can matter more than thousands of low-quality leads. 
+
+## I would build it in this order
+
+**Phase 1 — CRM**
+
+* Partners
+* Users
+* Pipeline
+* Activities
+* Contacts
+* Tasks
+* Goals
+
+**Phase 2 — Outreach**
+
+* Email
+* WhatsApp
+* Templates
+* Follow-up sequences
+* Outreach history
+
+**Phase 3 — AI**
+
+* Company research
+* Lead scoring
+* Personalised outreach
+* Follow-up recommendations
+* Meeting briefs
+
+**Phase 4 — Commercial engine**
+
+* Sponsorship inventory
+* Placement scenes
+* Package builder
+* Proposal generator
+* PDF generation
+
+**Phase 5 — Intelligence**
+
+* Pipeline forecasting
+* Goal tracking
+* Category gaps
+* Conversion analytics
+* "What should we do today?" AI
+
+The **Phase 5 feature is ultimately the killer feature**: when you open the app, it should tell the team, based on the $73,000 corporate target and current pipeline, **exactly which 5–10 actions have the highest expected financial impact today**.
+
+That is the system I'd build rather than another generic Salesforce-style CRM.
