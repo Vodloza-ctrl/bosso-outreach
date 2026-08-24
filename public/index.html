@@ -238,6 +238,7 @@ function render() {
         ${navBtn('partners','Partners')}
         ${navBtn('outreach','Outreach')}
         ${navBtn('templates','Templates')}
+        ${navBtn('materials','Materials')}
         ${navBtn('team','Team')}
       </nav>
       <div class="rail-foot">
@@ -265,6 +266,7 @@ async function renderTab(){
     else if (TAB==='partners') await viewPartners(main);
     else if (TAB==='outreach') await viewOutreach(main);
     else if (TAB==='templates') await viewTemplates(main);
+    else if (TAB==='materials') await viewMaterials(main);
     else if (TAB==='team') await viewTeam(main);
   } catch(e){
     main.innerHTML = `<div class="empty">Couldn't load this — ${e.message}</div>`;
@@ -355,7 +357,10 @@ async function viewPartners(main, filters={}){
     <div class="page-head">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;">
         <div><h1 class="display">Partners</h1><div class="rule"></div></div>
-        <button class="btn primary" onclick="openNewPartner()">+ Add partner</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn" onclick="openBulkAdd()">+ Bulk add</button>
+          <button class="btn primary" onclick="openNewPartner()">+ Add partner</button>
+        </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center;">
         <select id="fTrack" onchange="applyPartnerFilters()">
@@ -461,6 +466,43 @@ window.openNewPartner = function(){
     </div>
   `);
 };
+window.openBulkAdd = function(){
+  openDrawer(`
+    <div class="drawer-head"><div><h3>Bulk add leads</h3></div><button class="drawer-close" onclick="closeDrawer()">&times;</button></div>
+    <div class="drawer-body">
+      <div class="hint-box"><b>Format</b>One lead per line: Name, Category, City (track and everything else can be filled in later per-lead). Example:<br>CBZ Bank, banking, Harare<br>Meikles Hotel, hospitality, Bulawayo</div>
+      <div class="field-row"><label class="field">Track for all of these</label>
+        <select id="bkTrack"><option value="corporate">Corporate</option><option value="local_community">Local community</option></select>
+      </div>
+      <div class="field-row"><label class="field">Leads (one per line)</label><textarea id="bkLines" style="min-height:200px;" placeholder="CBZ Bank, banking, Harare"></textarea></div>
+      <button class="btn primary" id="bkSubmit" onclick="submitBulkAdd()">Add all</button>
+      <div id="bkResult" style="margin-top:10px;font-size:12px;color:var(--ink-muted);"></div>
+    </div>
+  `);
+};
+window.submitBulkAdd = async function(){
+  const track = document.getElementById('bkTrack').value;
+  const lines = document.getElementById('bkLines').value.split('\n').map(l=>l.trim()).filter(Boolean);
+  if (!lines.length) { toast('Add at least one line'); return; }
+  const btn = document.getElementById('bkSubmit');
+  const resultEl = document.getElementById('bkResult');
+  btn.disabled = true;
+  let ok = 0, failed = 0;
+  for (const line of lines) {
+    const [name, category, city] = line.split(',').map(s=>s && s.trim());
+    if (!name) { failed++; continue; }
+    try {
+      await api('/api/partners', {method:'POST', body: JSON.stringify({name, track, category: category||null, city: city||null})});
+      ok++;
+    } catch(e){ failed++; }
+    resultEl.textContent = `Added ${ok} so far${failed?`, ${failed} failed`:''}…`;
+  }
+  resultEl.textContent = `Done — ${ok} added${failed?`, ${failed} failed`:''}.`;
+  btn.disabled = false;
+  toast(`Added ${ok} lead${ok===1?'':'s'}`);
+  renderTab();
+};
+
 window.suggestAssignment = async function(){
   const body = {
     name: document.getElementById('npName').value,
@@ -611,6 +653,7 @@ window.logPartnerActivity = async function(id){
 async function viewOutreach(main){
   if (!PARTNERS.length) PARTNERS = await api('/api/partners');
   TEMPLATES = await api('/api/outreach/templates');
+  if (!ASSETS.length) ASSETS = await api('/api/assets');
   const reviewed = TEMPLATES.filter(t=>t.is_reviewed);
 
   main.innerHTML = `
@@ -629,6 +672,9 @@ async function viewOutreach(main){
           <div class="field-row"><label class="field">Template</label>
             <select id="ocTemplate"><option value="">Choose a template…</option>${reviewed.map(t=>`<option value="${t.id}" data-channel="${t.channel}">${t.name} (${t.channel})</option>`).join('')}</select>
           </div>
+          <div class="field-row"><label class="field">Attach materials (optional)</label>
+            <select id="ocAssets" multiple size="4">${ASSETS.map(a=>`<option value="${a.id}">${a.name}</option>`).join('') || '<option disabled>No materials uploaded yet</option>'}</select>
+          </div>
           <button class="btn small" onclick="renderOutreachDraft()">Fill draft</button>
           <div class="field-row" style="margin-top:16px;">
             <label class="field">Or: describe what you want, AI drafts it</label>
@@ -646,6 +692,10 @@ async function viewOutreach(main){
     </div>
   `;
 }
+function selectedAssetIds(){
+  const el = document.getElementById('ocAssets');
+  return el ? Array.from(el.selectedOptions).map(o=>o.value) : [];
+}
 window.renderOutreachDraft = async function(){
   const partnerId = document.getElementById('ocPartner').value;
   const templateSel = document.getElementById('ocTemplate');
@@ -654,7 +704,7 @@ window.renderOutreachDraft = async function(){
   const channel = templateSel.selectedOptions[0].dataset.channel;
   try {
     const draft = await api('/api/outreach/render', {method:'POST', body: JSON.stringify({partner_id:partnerId, template_id:templateId})});
-    showDraftArea(partnerId, templateId, channel, draft.subject, draft.body);
+    showDraftArea(partnerId, templateId, channel, draft.subject, draft.body, selectedAssetIds());
   } catch(e){ toast('Could not render: '+e.message); }
 };
 window.draftWithAI = async function(){
@@ -664,20 +714,22 @@ window.draftWithAI = async function(){
   const partner = PARTNERS.find(p=>p.id===partnerId);
   try {
     const res = await api('/api/ai/draft', {method:'POST', body: JSON.stringify({brief, track: partner?.track, tier: partner?.tier})});
-    showDraftArea(partnerId, '', 'email', null, res.draft);
+    showDraftArea(partnerId, '', 'email', null, res.draft, selectedAssetIds());
   } catch(e){ toast('AI draft failed: '+e.message); }
 };
-function showDraftArea(partnerId, templateId, channel, subject, body){
+function showDraftArea(partnerId, templateId, channel, subject, body, attachmentIds=[]){
   const area = document.getElementById('ocDraftArea');
   area.innerHTML = `
     ${subject!==null ? `<div class="field-row"><label class="field">Subject</label><input type="text" id="ocSubject" value="${(subject||'').replace(/"/g,'&quot;')}"></div>` : ''}
     <div class="field-row"><label class="field">Body</label><textarea id="ocBody" style="min-height:220px;">${body}</textarea></div>
+    ${attachmentIds.length ? `<div class="page-sub" style="margin-bottom:10px;">Attaching: ${attachmentIds.map(id=>ASSETS.find(a=>a.id===id)?.name||id).join(', ')}</div>` : ''}
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       ${channel==='email' ? `<button class="btn primary small" onclick="sendEmail('${partnerId}','${templateId}')">Send email</button>` : ''}
       <button class="btn small" onclick="copyDraft()">Copy text</button>
       <button class="btn small" onclick="markSent('${partnerId}','${templateId}','${channel}')">Mark as sent (manual)</button>
     </div>
   `;
+  area.dataset.attachmentIds = JSON.stringify(attachmentIds);
 }
 window.copyDraft = function(){
   const body = document.getElementById('ocBody').value;
@@ -686,21 +738,23 @@ window.copyDraft = function(){
 window.sendEmail = async function(partnerId, templateId){
   const subjectEl = document.getElementById('ocSubject');
   const body = document.getElementById('ocBody').value;
+  const attachment_ids = JSON.parse(document.getElementById('ocDraftArea').dataset.attachmentIds || '[]');
   try {
     await api('/api/outreach/send', {method:'POST', body: JSON.stringify({
       partner_id: partnerId, template_id: templateId||null, channel:'email',
-      subject: subjectEl ? subjectEl.value : null, final_body: body,
+      subject: subjectEl ? subjectEl.value : null, final_body: body, attachment_ids,
     })});
     toast('Sent');
   } catch(e){ toast('Send failed: '+e.message); }
 };
 window.markSent = async function(partnerId, templateId, channel){
   const body = document.getElementById('ocBody').value;
+  const attachment_ids = JSON.parse(document.getElementById('ocDraftArea').dataset.attachmentIds || '[]');
   try {
     if (channel==='whatsapp') {
-      await api('/api/outreach/whatsapp-sent', {method:'POST', body: JSON.stringify({partner_id:partnerId, template_id:templateId||null, final_body:body})});
+      await api('/api/outreach/whatsapp-sent', {method:'POST', body: JSON.stringify({partner_id:partnerId, template_id:templateId||null, final_body:body, attachment_ids})});
     } else {
-      await api('/api/outreach/email-sent', {method:'POST', body: JSON.stringify({partner_id:partnerId, template_id:templateId||null, final_body:body})});
+      await api('/api/outreach/email-sent', {method:'POST', body: JSON.stringify({partner_id:partnerId, template_id:templateId||null, final_body:body, attachment_ids})});
     }
     toast('Logged as sent');
   } catch(e){ toast('Could not log: '+e.message); }
@@ -769,6 +823,63 @@ window.reviewTemplate = async function(id){
     toast('Approved');
     renderTab();
   } catch(e){ toast('Could not approve: '+e.message); }
+};
+
+let ASSETS = [];
+async function viewMaterials(main){
+  ASSETS = await api('/api/assets');
+  main.innerHTML = `
+    <div class="page-head">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+        <div><h1 class="display">Materials</h1><div class="rule"></div></div>
+        <button class="btn primary" onclick="openUploadAsset()">+ Upload</button>
+      </div>
+      <div class="page-sub">Prospectus, rate card, one-pagers, brand assets — attach these from the Outreach tab.</div>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding:0;">
+        ${ASSETS.length ? `<table>
+          <thead><tr><th>Name</th><th>Type</th><th>Track</th><th>Added</th></tr></thead>
+          <tbody>${ASSETS.map(a=>`
+            <tr><td><b>${a.name}</b></td><td>${(a.file_type||'').toUpperCase()}</td><td>${a.track||'—'}</td><td>${fmtDate(a.created_at)}</td></tr>
+          `).join('')}</tbody>
+        </table>` : `<div class="empty"><div class="display">Nothing uploaded yet</div>Upload the prospectus, rate card, and one-pagers here.</div>`}
+      </div>
+    </div>
+  `;
+}
+window.openUploadAsset = function(){
+  openDrawer(`
+    <div class="drawer-head"><div><h3>Upload material</h3></div><button class="drawer-close" onclick="closeDrawer()">&times;</button></div>
+    <div class="drawer-body">
+      <div class="field-row"><label class="field">Name</label><input type="text" id="asName" placeholder="e.g. Partnership Prospectus"></div>
+      <div class="field-row"><label class="field">Track</label><select id="asTrack"><option value="">Any</option><option value="corporate">Corporate</option><option value="local_community">Local community</option></select></div>
+      <div class="field-row"><label class="field">File</label><input type="file" id="asFile"></div>
+      <button class="btn primary" id="asUploadBtn" onclick="uploadAsset()">Upload</button>
+    </div>
+  `);
+};
+window.uploadAsset = async function(){
+  const fileInput = document.getElementById('asFile');
+  const file = fileInput.files[0];
+  const name = document.getElementById('asName').value || (file && file.name);
+  const track = document.getElementById('asTrack').value || null;
+  if (!file) { toast('Choose a file first'); return; }
+  const btn = document.getElementById('asUploadBtn');
+  btn.disabled = true; btn.textContent = 'Uploading…';
+  try {
+    const base64Data = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = () => rej(new Error('Read failed'));
+      r.readAsDataURL(file);
+    });
+    const file_type = (file.name.split('.').pop() || 'pdf');
+    await api('/api/assets', {method:'POST', body: JSON.stringify({name, track, file_type, base64Data})});
+    toast('Uploaded');
+    closeDrawer();
+    renderTab();
+  } catch(e){ toast('Upload failed: '+e.message); btn.disabled=false; btn.textContent='Upload'; }
 };
 
 async function viewTeam(main){
