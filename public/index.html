@@ -22,6 +22,11 @@
     --blue-ink:#33556E;
     --radius:10px;
     --shadow:0 1px 2px rgba(22,22,15,.06), 0 8px 24px rgba(22,22,15,.04);
+    --sidebar-bg:#18170F;
+    --sidebar-bg-2:#221F14;
+    --sidebar-text:#B8B4A0;
+    --sidebar-text-bright:#F3F1E8;
+    --sidebar-hairline:#2E2B1D;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
@@ -44,43 +49,73 @@
   #app{display:flex;min-height:100vh;}
 
   .rail{
-    width:220px;flex:0 0 220px;
-    background:var(--panel);
-    border-right:1px solid var(--hairline);
+    width:240px;flex:0 0 240px;
+    background:var(--sidebar-bg);
+    background-image:linear-gradient(160deg, var(--sidebar-bg) 0%, var(--sidebar-bg-2) 100%);
+    border-right:1px solid var(--sidebar-hairline);
     padding:20px 14px;
     display:flex;flex-direction:column;
     position:sticky;top:0;height:100vh;
   }
-  .rail-brand{padding:6px 8px 18px;}
+  .rail-brand{padding:6px 8px 16px;}
   .rail-brand .mark{display:flex;align-items:center;gap:8px;}
   .rail-brand .swatch{
-    width:14px;height:14px;background:var(--ink);border-radius:2px;
-    box-shadow:3px 0 0 var(--paper), 3px 0 0 1px var(--ink), 6px 0 0 var(--ink);
+    width:14px;height:14px;background:var(--brass);border-radius:2px;
+    box-shadow:3px 0 0 var(--sidebar-bg), 3px 0 0 1px var(--brass), 6px 0 0 var(--brass);
   }
-  .rail-brand .title{font-size:13px;letter-spacing:.06em;}
-  .rail-brand .sub{font-size:11px;color:var(--ink-muted);margin-top:2px;}
+  .rail-brand .title{font-size:13px;letter-spacing:.06em;color:var(--sidebar-text-bright);}
+  .rail-brand .sub{font-size:11px;color:var(--sidebar-text);margin-top:2px;}
 
-  nav.rail-nav{display:flex;flex-direction:column;gap:2px;margin-top:8px;}
+  .ticker{
+    margin:0 2px 16px;padding:9px 12px;border-radius:8px;
+    background:rgba(169,129,46,.14);border:1px solid rgba(169,129,46,.3);
+    min-height:34px;display:flex;align-items:center;
+    overflow:hidden;
+  }
+  .ticker .ticker-dot{width:5px;height:5px;border-radius:50%;background:var(--brass);flex:0 0 auto;margin-right:8px;box-shadow:0 0 0 3px rgba(169,129,46,.18);}
+  .ticker span.line{
+    font-size:11.5px;color:var(--brass);font-weight:600;line-height:1.35;
+    opacity:0;transform:translateY(3px);transition:opacity .4s ease, transform .4s ease;
+  }
+  .ticker span.line.show{opacity:1;transform:translateY(0);}
+
+  nav.rail-nav{display:flex;flex-direction:column;gap:2px;margin-top:2px;}
   nav.rail-nav button{
     text-align:left;background:none;border:none;
     padding:9px 10px;border-radius:8px;
-    font-size:13px;color:var(--ink-muted);
+    font-size:13px;color:var(--sidebar-text);
     display:flex;align-items:center;gap:9px;
   }
-  nav.rail-nav button .dot{width:6px;height:6px;border-radius:50%;background:var(--hairline);flex:0 0 auto;}
-  nav.rail-nav button.active{background:var(--paper);color:var(--ink);box-shadow:var(--shadow);font-weight:600;}
+  nav.rail-nav button .dot{width:6px;height:6px;border-radius:50%;background:var(--sidebar-hairline);flex:0 0 auto;}
+  nav.rail-nav button.active{background:rgba(169,129,46,.16);color:var(--sidebar-text-bright);font-weight:600;}
   nav.rail-nav button.active .dot{background:var(--brass);}
-  nav.rail-nav button:hover:not(.active){background:var(--panel-2);}
+  nav.rail-nav button:hover:not(.active){background:rgba(255,255,255,.05);color:var(--sidebar-text-bright);}
 
-  .rail-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--hairline);}
-  .who{font-size:12px;color:var(--ink-muted);}
-  .who b{color:var(--ink);display:block;font-size:13px;}
-  .role-pill{
-    display:inline-block;margin-top:6px;font-size:10px;letter-spacing:.06em;
-    text-transform:uppercase;padding:3px 7px;border-radius:5px;
-    background:var(--brass);color:#fff;font-weight:700;
+  .rail-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--sidebar-hairline);}
+  .rail-art{
+    width:100%;border-radius:10px;overflow:hidden;margin-bottom:14px;
+    display:flex;align-items:flex-end;justify-content:center;
+    position:relative;
   }
-  .role-pill.member{background:var(--panel-2);color:var(--ink-muted);}
+  .rail-art::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:24px;
+    background:linear-gradient(to bottom, var(--sidebar-bg), transparent);
+    z-index:1;
+  }
+  .rail-art img{width:100%;display:block;filter:drop-shadow(0 6px 14px rgba(0,0,0,.45));}
+  .logout-btn{color:var(--sidebar-text) !important;}
+  .logout-btn:hover{color:var(--brick) !important;background:rgba(156,74,52,.12) !important;}
+
+  .top-header{
+    display:flex;align-items:center;gap:12px;padding:0 0 20px;
+    border-bottom:1px solid var(--hairline);margin-bottom:24px;
+  }
+  .avatar-initials{
+    width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:0 0 auto;
+  }
+  .top-header .name{font-size:14px;font-weight:700;}
+  .top-header .role{font-size:12px;color:var(--ink-muted);}
 
   main{flex:1;min-width:0;padding:28px 34px 60px;max-width:1180px;}
 
@@ -225,6 +260,26 @@ function teamName(id){
   return t ? (t.name || t.email) : id;
 }
 
+const TICKER_LINES = [
+  "Siyinqaba. Every call moves us closer.",
+  "Founding partner slots are limited — make today count.",
+  "Consistency wins deals. One more follow-up today.",
+  "We're building history — outreach by outreach.",
+  "Every \"not yet\" is one step closer to \"yes.\"",
+];
+let tickerIdx = 0, tickerTimer = null;
+function startTicker(){
+  const el = document.getElementById('tickerLine');
+  if (!el) return;
+  clearInterval(tickerTimer);
+  const show = () => {
+    el.classList.remove('show');
+    setTimeout(()=>{ el.textContent = TICKER_LINES[tickerIdx % TICKER_LINES.length]; el.classList.add('show'); tickerIdx++; }, 250);
+  };
+  show();
+  tickerTimer = setInterval(show, 6000);
+}
+
 function render() {
   const app = document.getElementById('app');
   app.innerHTML = `
@@ -233,6 +288,7 @@ function render() {
         <div class="mark"><span class="swatch"></span><span class="title display">The Bosso Movie</span></div>
         <div class="sub">Outreach &amp; partnerships</div>
       </div>
+      <div class="ticker"><span class="ticker-dot"></span><span class="line" id="tickerLine"></span></div>
       <nav class="rail-nav">
         ${navBtn('dashboard','Dashboard')}
         ${navBtn('partners','Partners')}
@@ -242,19 +298,39 @@ function render() {
         ${navBtn('team','Team')}
       </nav>
       <div class="rail-foot">
-        <div class="who">
-          <b>${ME ? (ME.name || ME.email) : '…'}</b>
-          ${ME ? ME.email : ''}
-          <div><span class="role-pill ${ME && ME.role!=='admin' ? 'member':''}">${ME ? (ME.role==='admin'?'Producer / Admin':'Team member') : ''}</span></div>
-        </div>
+        <div class="rail-art" id="railArt"><img src="/highlanders-cut-out.webp" alt="Born Into the Black and White — Highlanders FC feature film"></div>
+        <nav class="rail-nav">
+          <a href="/cdn-cgi/access/logout" class="logout-btn" style="text-align:left;padding:9px 10px;border-radius:8px;font-size:13px;display:flex;align-items:center;gap:9px;text-decoration:none;">
+            <span class="dot"></span>Log out
+          </a>
+        </nav>
       </div>
     </aside>
     <main id="main"></main>
   `;
+  startTicker();
   renderTab();
 }
 function navBtn(id,label){
   return `<button data-tab="${id}" class="${TAB===id?'active':''}" onclick="setTab('${id}')"><span class="dot"></span>${label}</button>`;
+}
+function initials(name, email){
+  const src = (name || email || '?').trim();
+  const parts = src.split(/\s+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return src.slice(0,2).toUpperCase();
+}
+function topHeader(){
+  if (!ME) return '';
+  return `
+    <div class="top-header">
+      <div class="avatar-initials">${initials(ME.name, ME.email)}</div>
+      <div>
+        <div class="name">${ME.name || ME.email}</div>
+        <div class="role">${ME.role==='admin' ? 'Producer / Admin' : 'Team member'}</div>
+      </div>
+    </div>
+  `;
 }
 window.setTab = function(id){ TAB = id; render(); };
 
@@ -289,6 +365,7 @@ async function viewDashboard(main){
   });
 
   main.innerHTML = `
+    ${topHeader()}
     <div class="page-head">
       <h1 class="display">Dashboard</h1>
       <div class="rule"></div>
@@ -354,6 +431,7 @@ async function viewPartners(main, filters={}){
   const STATUSES = ['not_contacted','contacted','meeting_booked','proposal_sent','negotiating','won','lost'];
 
   main.innerHTML = `
+    ${topHeader()}
     <div class="page-head">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;">
         <div><h1 class="display">Partners</h1><div class="rule"></div></div>
@@ -657,6 +735,7 @@ async function viewOutreach(main){
   const reviewed = TEMPLATES.filter(t=>t.is_reviewed);
 
   main.innerHTML = `
+    ${topHeader()}
     <div class="page-head">
       <h1 class="display">Outreach</h1>
       <div class="rule"></div>
@@ -764,6 +843,7 @@ async function viewTemplates(main){
   TEMPLATES = await api('/api/outreach/templates');
   const isAdmin = ME && ME.role === 'admin';
   main.innerHTML = `
+    ${topHeader()}
     <div class="page-head">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;">
         <div><h1 class="display">Templates</h1><div class="rule"></div></div>
@@ -829,6 +909,7 @@ let ASSETS = [];
 async function viewMaterials(main){
   ASSETS = await api('/api/assets');
   main.innerHTML = `
+    ${topHeader()}
     <div class="page-head">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;">
         <div><h1 class="display">Materials</h1><div class="rule"></div></div>
@@ -886,6 +967,7 @@ async function viewTeam(main){
   TEAM = await api('/api/team');
   const isAdmin = ME && ME.role === 'admin';
   main.innerHTML = `
+    ${topHeader()}
     <div class="page-head">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;">
         <div><h1 class="display">Team</h1><div class="rule"></div></div>
